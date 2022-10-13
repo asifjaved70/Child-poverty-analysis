@@ -1,0 +1,1323 @@
+                                             
+				------------>***** TASK 1 *****<------------
+---- All tables & columns are referenced by data dictionary and Technical Guide
+
+--> 1. Creating Database 
+create database Child_Well_Being_Monitor;
+
+--> 2. Making new column 'childidround' in each country file
+--> Adding 'childidround' in ethiopia_constructed
+ALTER TABLE [Child_Well_Being_Monitor].[dbo].[ethiopia_constructed] ADD childidround nvarchar(500) null;
+UPDATE [Child_Well_Being_Monitor].[dbo].[ethiopia_constructed] SET childidround = CONCAT(childid,round);
+Select childidround from [Child_Well_Being_Monitor].[dbo].[ethiopia_constructed];
+--> Adding 'childidround' in india_constructed
+ALTER TABLE [Child_Well_Being_Monitor].[dbo].[india_constructed] ADD childidround nvarchar(500) null;
+UPDATE [Child_Well_Being_Monitor].[dbo].[india_constructed] SET childidround = CONCAT(childid,round);
+Select childidround from [Child_Well_Being_Monitor].[dbo].[india_constructed];
+--> Adding 'childidround' in peru_constructed
+ALTER TABLE [Child_Well_Being_Monitor].[dbo].[peru_constructed] ADD childidround nvarchar(500) null;
+UPDATE [Child_Well_Being_Monitor].[dbo].[peru_constructed] SET childidround = CONCAT(childid,round);
+Select childidround from [Child_Well_Being_Monitor].[dbo].[peru_constructed];
+--> Adding 'childidround' in peru_constructed
+ALTER TABLE [Child_Well_Being_Monitor].[dbo].[vietnam_constructed] ADD childidround nvarchar(500) null;
+UPDATE [Child_Well_Being_Monitor].[dbo].[vietnam_constructed] SET childidround = CONCAT(childid,round);
+Select childidround from [Child_Well_Being_Monitor].[dbo].[vietnam_constructed];
+
+--> Creating Tables and relationships with Primary keys & Foreign keys
+	--> Table-1
+CREATE TABLE Child
+([childroundid] nvarchar(500) NOT null PRIMARY KEY,
+[childid] nvarchar(max) NOT null,  [clustid] nvarchar(max) null,
+[commid] nvarchar(max) null,[typesite] nvarchar(max) null, 
+[region] nvarchar(max) null,[dint] nvarchar(max) null,
+[round] nvarchar(max) null,[yc] nvarchar(max) null,
+[chlocation] nvarchar(max) null);
+	--> Table-2
+CREATE TABLE Panel_information
+([inround_hh] nvarchar(max) null,[panel] nvarchar(max) null,
+[deceased] nvarchar(max) null,
+[childroundid] nvarchar(500) FOREIGN KEY REFERENCES [dbo].[Child]([childroundid]));
+	--> Table-3
+CREATE TABLE Child_characteristics
+([sex] nvarchar(max) null,
+[chlang] nvarchar(max) null,[chethnic] nvarchar(max) null,
+[chldrel] nvarchar(max) null,[agemon] nvarchar(max) null,
+[marrcohab] nvarchar(max) null,[marrcohab_age] nvarchar(max) null,
+[birth] nvarchar(max) null,[birth_age] nvarchar(max) null,
+[childroundid] nvarchar(500) FOREIGN KEY REFERENCES [dbo].[Child]([childroundid]));
+	--> Table=4
+CREATE TABLE Anthropometric_info
+([chweight] nvarchar(max) null, [chheight] nvarchar(max) null,
+[bmi] nvarchar(max) null,[zwfa] nvarchar(max) null,
+[zhfa] nvarchar(max) null,[zbfa] nvarchar(max) null,
+[zwfl] nvarchar(max) null,[fwfa] nvarchar(max) null,
+[fhfa] nvarchar(max) null,[fbfa] nvarchar(max) null,
+[fwfl] nvarchar(max) null,[underweight] nvarchar(max) null,
+[stunting] nvarchar(max) null,[thinness] nvarchar(max) null,
+[childroundid] nvarchar(500) FOREIGN KEY REFERENCES [dbo].[Child]([childroundid]));
+	--> Table=5
+CREATE TABLE Birth_immunisation
+([bwght] nvarchar(max) null,[bwdoc] nvarchar(max) null,
+[numante] nvarchar(max) null,[tetanus] nvarchar(max) null,
+[delivery] nvarchar(max) null,[bcg] nvarchar(max) null,
+[measles] nvarchar(max) null,[polio] nvarchar(max) null,
+[dpt] nvarchar(max) null,[hib] nvarchar(max) null,
+[childroundid] nvarchar(500) FOREIGN KEY REFERENCES [dbo].[Child]([childroundid]));
+	--> Table=6
+CREATE TABLE Health_wellbeing
+([chmightdie] nvarchar(max) null,
+[chillness] nvarchar(max) null,[chinjury] nvarchar(max) null,
+[chhprob] nvarchar(max) null,[chdisability] nvarchar(max) null,
+[chdisscale] nvarchar(max) null,[chhrel] nvarchar(max) null,
+[chhealth] nvarchar(max) null,[cladder] nvarchar(max) null,
+[childroundid] nvarchar(500) FOREIGN KEY REFERENCES [dbo].[Child]([childroundid]));
+	--> Table=7
+CREATE TABLE Smoking_drinking
+([chsmoke] nvarchar(max) null,
+[chalcohol] nvarchar(max) null,[chrephealth1] nvarchar(max) null,
+[chrephealth2] nvarchar(max) null,[chrephealth3] nvarchar(max) null,
+[chrephealth4] nvarchar(max) null,
+[childroundid] nvarchar(500) FOREIGN KEY REFERENCES [dbo].[Child]([childroundid])
+);
+	--> Table=8
+CREATE TABLE Time_use
+([hsleep] nvarchar(max) null,[hcare] nvarchar(max) null,
+[hchore] nvarchar(max) null,[htask] nvarchar(max) null,
+[hwork] nvarchar(max) null,[hschool] nvarchar(max) null,
+[hstudy] nvarchar(max) null,[hplay] nvarchar(max) null,
+[commwork] nvarchar(max) null,[commsch] nvarchar(max) null,
+[childroundid] nvarchar(500) FOREIGN KEY REFERENCES [dbo].[Child]([childroundid]));
+	--> Table=9
+CREATE TABLE Education_skills
+([preprim] nvarchar(max) null,[agegr1] nvarchar(max) null,
+[enrol] nvarchar(max) null,[engrade] nvarchar(max) null,
+[entype] nvarchar(max) null,[hghgrade] nvarchar(max) null,
+[timesch] nvarchar(max) null,[levlread] nvarchar(max) null,
+[levlwrit] nvarchar(max) null,[literate] nvarchar(max) null,
+[childroundid] nvarchar(500) FOREIGN KEY REFERENCES [dbo].[Child]([childroundid]));
+	--> Table=10
+CREATE TABLE Mother_father_caregiver_characteristics
+([dadid] nvarchar(max) null,[dadage] nvarchar(max) null,
+[dadlive] nvarchar(max) null,[dadyrdied] nvarchar(max) null,
+[dadcantread] nvarchar(max) null,[dadedu] nvarchar(max) null,
+[momid] nvarchar(max) null,[momage] nvarchar(max) null,
+[momlive] nvarchar(max) null,[momyrdied] nvarchar(max) null,
+[momcantread] nvarchar(max) null,[momedu] nvarchar(max) null,
+[careid] nvarchar(max) null,[careage] nvarchar(max) null,
+[caresex] nvarchar(max) null,[carehead] nvarchar(max) null,
+[carerel] nvarchar(max) null,[carecantread] nvarchar(max) null,
+[caredu] nvarchar(max) null,[careladder] nvarchar(max) null,
+[careldr4yrs] nvarchar(max) null,
+[childroundid] nvarchar(500) FOREIGN KEY REFERENCES [dbo].[Child]([childroundid]));
+	--> Table=11
+CREATE TABLE Household_head_characteristics
+([headid] nvarchar(max) null,[headage] nvarchar(max) null,
+[headsex] nvarchar(max) null,[headedu] nvarchar(max) null,
+[headrel] nvarchar(max) null,
+[childroundid] nvarchar(500) FOREIGN KEY REFERENCES [dbo].[Child]([childroundid]));
+	--> Table=12
+CREATE TABLE Size_composition 
+([male05] nvarchar(max) null,[male612] nvarchar(max) null,
+[male1317] nvarchar(max) null,[male1860] nvarchar(max) null,
+[male61] nvarchar(max) null,[female05] nvarchar(max) null,
+[female612] nvarchar(max) null,[female1317] nvarchar(max) null,
+[female1860] nvarchar(max) null,[female61] nvarchar(max) null,
+[hhsize] nvarchar(max) null,
+[childroundid] nvarchar(500) FOREIGN KEY REFERENCES [dbo].[Child]([childroundid]));
+	--> Table=13
+CREATE TABLE [Livestock_land_house_ownership] 
+(ownlandhse nvarchar(max) null,
+ownhouse nvarchar(max) null,aniany nvarchar(max) null,animilk nvarchar(max) null,
+anidrau nvarchar(max) null,anirumi nvarchar(max) null,anispec nvarchar(max) null,
+anicowm nvarchar(max) null,anicowt nvarchar(max) null,anidonk nvarchar(max) null,
+anishee nvarchar(max) null,anigoat nvarchar(max) null,anipigs nvarchar(max) null,
+anipoul nvarchar(max) null,anirabb nvarchar(max) null,aniothr nvarchar(max) null,
+[childroundid] nvarchar(500) FOREIGN KEY REFERENCES [dbo].[Child]([childroundid]));
+	--> Table=14
+CREATE TABLE Credit_food_security_public_programmes
+([credit] nvarchar(max) null,[foodsec] nvarchar(max) null,[hep] nvarchar(max) null,
+[psnp_pw] nvarchar(max) null,[psnp_ds] nvarchar(max) null,[eap] nvarchar(max) null,
+[othprog] nvarchar(max) null,[resettled] nvarchar(max) null,[pds] nvarchar(max) null,
+[nregs] nvarchar(max) null,[nregs_work] nvarchar(max) null,[nregs_allow] nvarchar(max) null,
+[rajiv] nvarchar(max) null,[sabla] nvarchar(max) null,[sabla_yl] nvarchar(max) null,
+[ikp] nvarchar(max) null,[ikp_child] nvarchar(max) null,[juntos] nvarchar(max) null,
+[bonograt] nvarchar(max) null,[sisgrat_yl] nvarchar(max) null,
+[minsa_yl] nvarchar(max) null,[insur_yl] nvarchar(max) null,[beca_yl] nvarchar(max) null,
+[projoven_yl] nvarchar(max) null,[molisa06] nvarchar(max) null,
+[molisa09] nvarchar(max) null,[molisa10] nvarchar(max) null,[molisa11] nvarchar(max) null,
+[molisa12] nvarchar(max) null,[molisa13] nvarchar(max) null,[molisa14] nvarchar(max) null,
+[molisa15] nvarchar(max) null,[molisa16] nvarchar(max) null,
+[childroundid] nvarchar(500) FOREIGN KEY REFERENCES [dbo].[Child]([childroundid])
+);
+	--> Table=15
+CREATE TABLE Household_shocks
+([shcrime1] nvarchar(max) null,[shcrime2] nvarchar(max) null,[shcrime3] nvarchar(max) null,
+[shcrime4] nvarchar(max) null,[shcrime5] nvarchar(max) null,[shcrime6] nvarchar(max) null,
+[shcrime7] nvarchar(max) null,[shcrime8] nvarchar(max) null,[shregul1] nvarchar(max) null,
+[shregul2] nvarchar(max) null,[shregul3] nvarchar(max) null,[shregul4] nvarchar(max) null,
+[shregul5] nvarchar(max) null,[shregul6] nvarchar(max) null,[shecon1] nvarchar(max) null,
+[shecon2] nvarchar(max) null,[shecon3] nvarchar(max) null,[shecon4] nvarchar(max) null,
+[shecon5] nvarchar(max) null,[shecon6] nvarchar(max) null,[shecon7] nvarchar(max) null,
+[shecon8] nvarchar(max) null,[shecon9] nvarchar(max) null,[shecon10] nvarchar(max) null,
+[shecon11] nvarchar(max) null,[shecon12] nvarchar(max) null,[shecon13] nvarchar(max) null,
+[shecon14] nvarchar(max) null,[shenv1] nvarchar(max) null,[shenv2] nvarchar(max) null,
+[shenv3] nvarchar(max) null,[shenv4] nvarchar(max) null,[shenv5] nvarchar(max) null,
+[shenv6] nvarchar(max) null,[shenv7] nvarchar(max) null,[shenv8] nvarchar(max) null,
+[shenv9] nvarchar(max) null,[shenv10] nvarchar(max) null,[shenv11] nvarchar(max) null,
+[shenv12] nvarchar(max) null,[shenv13] nvarchar(max) null,[shhouse1] nvarchar(max) null,
+[shhouse2] nvarchar(max) null,[shhouse3] nvarchar(max) null,[shfam1] nvarchar(max) null,
+[shfam2] nvarchar(max) null,[shfam3] nvarchar(max) null,[shfam4] nvarchar(max) null,
+[shfam5] nvarchar(max) null,[shfam6] nvarchar(max) null,[shfam7] nvarchar(max) null,
+[shfam8] nvarchar(max) null,[shfam9] nvarchar(max) null,[shfam10] nvarchar(max) null,
+[shfam11] nvarchar(max) null,[shfam12] nvarchar(max) null,[shfam13] nvarchar(max) null,
+[shfam14] nvarchar(max) null,[shfam15] nvarchar(max) null,[shfam16] nvarchar(max) null,
+[shfam17] nvarchar(max) null,[shfam18] nvarchar(max) null,[shother] nvarchar(max) null,
+[childroundid] nvarchar(500) FOREIGN KEY REFERENCES [dbo].[Child]([childroundid]));
+
+	--> Table=16
+CREATE TABLE Young_lives_wealth
+([wi] nvarchar(max) null,[hq] nvarchar(max) null,[sv] nvarchar(max) null,
+[cd] nvarchar(max) null,[elecq] nvarchar(max) null,[toiletq] nvarchar(max) null,
+[drwaterq] nvarchar(max) null,[cookingq] nvarchar(max) null,
+[childroundid] nvarchar(500) FOREIGN KEY REFERENCES [dbo].[Child]([childroundid])
+);
+--> Data insertion into Tables
+	--> Table-1 
+INSERT INTO [Child] (childroundid, childid, clustid, commid, typesite, region, dint, round, yc, chlocation)
+SELECT childidround, childid, clustid, commid, typesite, region, dint, round, yc, childloc
+FROM [Child_Well_Being_Monitor].[dbo].[ethiopia_constructed]
+UNION ALL
+SELECT childidround, childid, clustid, commid, typesite, region, dint, round, yc, childloc
+FROM [Child_Well_Being_Monitor].[dbo].[india_constructed]
+UNION ALL
+SELECT childidround, childid, clustid, placeid, typesite, region, dint, round, yc, childloc
+FROM [Child_Well_Being_Monitor].[dbo].[peru_constructed]
+UNION ALL
+SELECT childidround, childid, clustid, commid, typesite, region, dint, round, yc, childloc
+FROM [Child_Well_Being_Monitor].[dbo].[vietnam_constructed];
+
+	--> Table-2 
+INSERT INTO [Panel_information] (childroundid, inround_hh, panel, deceased)
+SELECT childidround, inround, panel, deceased
+FROM [Child_Well_Being_Monitor].[dbo].[ethiopia_constructed]
+UNION ALL
+SELECT childidround, inround, panel12345, deceased
+FROM [Child_Well_Being_Monitor].[dbo].[india_constructed]
+UNION ALL
+SELECT childidround, inround, panel12345, deceased
+FROM [Child_Well_Being_Monitor].[dbo].[peru_constructed]
+UNION ALL
+SELECT childidround, inround, panel12345, deceased
+FROM [Child_Well_Being_Monitor].[dbo].[vietnam_constructed];
+
+	--> Table-3
+INSERT INTO [Child_characteristics] (childroundid, sex, chlang,chethnic,chldrel,agemon,marrcohab,marrcohab_age,birth,birth_age)
+SELECT childidround,chsex,chlang,chethnic,chldrel,agemon,marrcohab,marrcohab_age,birth,birth_age
+FROM [Child_Well_Being_Monitor].[dbo].[ethiopia_constructed]
+UNION ALL
+SELECT childidround,chsex,chlang,chethnic,chldrel,agemon,marrcohab,marrcohab_age,birth,birth_age
+FROM [Child_Well_Being_Monitor].[dbo].[india_constructed]
+UNION ALL
+SELECT childidround,chsex,chlang,chethnic,chldrel,agemon,marrcohab,marrcohab_age,birth,birth_age
+FROM [Child_Well_Being_Monitor].[dbo].[peru_constructed]
+UNION ALL
+SELECT childidround,chsex,chlang,chethnic,chldrel,agemon,marrcohab,marrcohab_age,birth,birth_age
+FROM [Child_Well_Being_Monitor].[dbo].[vietnam_constructed];
+
+	--> Table-4
+INSERT INTO [Anthropometric_info] (childroundid,chweight,chheight,bmi,zwfa,zhfa,zbfa,zwfl,fwfa,fhfa,fbfa,fwfl,underweight,stunting,thinness)
+SELECT childidround,chweight,chheight,bmi,zwfa,zhfa,zbfa,zwfl,fwfa,fhfa,fbfa,fwfl,underweight,stunting,thinness
+FROM [Child_Well_Being_Monitor].[dbo].[ethiopia_constructed]
+UNION ALL
+SELECT childidround,chweight,chheight,bmi,zwfa,zhfa,zbfa,zwfl,fwfa,fhfa,fbfa,fwfl,underweight,stunting,thinness
+FROM [Child_Well_Being_Monitor].[dbo].[india_constructed]
+UNION ALL
+SELECT childidround,chweight,chheight,bmi,zwfa,zhfa,zbfa,zwfl,fwfa,fhfa,fbfa,fwfl,underweight,stunting,thinness
+FROM [Child_Well_Being_Monitor].[dbo].[peru_constructed]
+UNION ALL
+SELECT childidround,chweight,chheight,bmi,zwfa,zhfa,zbfa,zwfl,fwfa,fhfa,fbfa,fwfl,underweight,stunting,thinness
+FROM [Child_Well_Being_Monitor].[dbo].[vietnam_constructed];
+
+	--> Table-5
+INSERT INTO [Birth_immunisation] (childroundid,bwght,bwdoc,numante,tetanus,delivery,bcg,measles,polio,dpt,hib)
+SELECT childidround,bwght,bwdoc,numante,tetanus,delivery,bcg,measles,polio,dpt,hib
+FROM [Child_Well_Being_Monitor].[dbo].[ethiopia_constructed]
+UNION ALL
+SELECT childidround,bwght,bwdoc,numante,tetanus,delivery,bcg,measles,polio,dpt,hib
+FROM [Child_Well_Being_Monitor].[dbo].[india_constructed]
+UNION ALL
+SELECT childidround,bwght,bwdoc,numante,tetanus,delivery,bcg,measles,polio,dpt,hib
+FROM [Child_Well_Being_Monitor].[dbo].[peru_constructed]
+UNION ALL
+SELECT childidround,bwght,bwdoc,numante,tetanus,delivery,bcg,measles,polio,dpt,hib
+FROM [Child_Well_Being_Monitor].[dbo].[vietnam_constructed];
+
+	--> Table-6
+INSERT INTO [Health_wellbeing] (childroundid,chmightdie,chillness,chinjury,chhprob,chdisability,chdisscale,chhrel,chhealth,cladder)
+SELECT childidround,chmightdie, chillness, chinjury, chhprob, chdisability, chdisscale, chhrel, chhealth, cladder
+FROM [Child_Well_Being_Monitor].[dbo].[ethiopia_constructed]
+UNION ALL
+SELECT childidround,chmightdie, chillness, chinjury, chhprob, chdisability, chdisscale, chhrel, chhealth, cladder
+FROM [Child_Well_Being_Monitor].[dbo].[india_constructed]
+UNION ALL
+SELECT childidround,chmightdie, chillness, chinjury, chhprob, chdisability, chdisscale, chhrel, chhealth, cladder
+FROM [Child_Well_Being_Monitor].[dbo].[peru_constructed]
+UNION ALL
+SELECT childidround,chmightdie, chillness, chinjury, chhprob, chdisability, chdisscale, chhrel, chhealth, cladder
+FROM [Child_Well_Being_Monitor].[dbo].[vietnam_constructed];
+
+	--> Table-7
+INSERT INTO [Smoking_drinking] (childroundid,chsmoke,chalcohol,chrephealth1,chrephealth2,chrephealth3,chrephealth4)
+SELECT childidround,chsmoke,chalcohol,chrephealth1,chrephealth2,chrephealth3,chrephealth4
+FROM [Child_Well_Being_Monitor].[dbo].[ethiopia_constructed]
+UNION ALL
+SELECT childidround,chsmoke,chalcohol,chrephealth1,chrephealth2,chrephealth3,chrephealth4
+FROM [Child_Well_Being_Monitor].[dbo].[india_constructed]
+UNION ALL
+SELECT childidround,chsmoke,chalcohol,chrephealth1,chrephealth2,chrephealth3,chrephealth4
+FROM [Child_Well_Being_Monitor].[dbo].[peru_constructed]
+UNION ALL
+SELECT childidround,chsmoke,chalcohol,chrephealth1,chrephealth2,chrephealth3,chrephealth4
+FROM [Child_Well_Being_Monitor].[dbo].[vietnam_constructed];
+
+	--> Table-8
+INSERT INTO [Time_use](childroundid,hsleep,hcare,hchore,htask,hwork,hschool,hstudy,hplay,commwork,commsch)
+SELECT childidround,hsleep,hcare,hchore,htask,hwork,hschool,hstudy,hplay,commwork,commsch
+FROM [Child_Well_Being_Monitor].[dbo].[ethiopia_constructed]
+UNION ALL
+SELECT childidround,hsleep,hcare,hchore,htask,hwork,hschool,hstudy,hplay,commwork,commsch
+FROM [Child_Well_Being_Monitor].[dbo].[india_constructed]
+UNION ALL
+SELECT childidround,hsleep,hcare,hchore,htask,hwork,hschool,hstudy,hplay,commwork,commsch
+FROM [Child_Well_Being_Monitor].[dbo].[peru_constructed]
+UNION ALL
+SELECT childidround,hsleep,hcare,hchore,htask,hwork,hschool,hstudy,hplay,commwork,commsch
+FROM [Child_Well_Being_Monitor].[dbo].[vietnam_constructed];
+
+	--> Table-9
+INSERT INTO [Education_skills] (childroundid,preprim,agegr1,enrol,engrade,entype,hghgrade,timesch,levlread,levlwrit,literate)
+SELECT childidround,preprim,agegr1,enrol,engrade,entype,hghgrade,timesch,levlread,levlwrit,literate
+FROM [Child_Well_Being_Monitor].[dbo].[ethiopia_constructed]
+UNION ALL
+SELECT childidround,preprim,agegr1,enrol,engrade,entype,hghgrade,timesch,levlread,levlwrit,literate
+FROM [Child_Well_Being_Monitor].[dbo].[india_constructed]
+UNION ALL
+SELECT childidround,preprim,agegr1,enrol,engrade,entype,null,timesch,levlread,levlwrit,literate
+FROM [Child_Well_Being_Monitor].[dbo].[peru_constructed]
+UNION ALL
+SELECT childidround,preprim,agegr1,enrol,engrade,entype,hghgrade,timesch,levlread,levlwrit,literate
+FROM [Child_Well_Being_Monitor].[dbo].[vietnam_constructed];
+
+	--> Table-10
+INSERT INTO [Mother_father_caregiver_characteristics] (childroundid, dadid,dadage,dadlive,dadyrdied,dadcantread,dadedu,momid,momage,momlive,momyrdied,momcantread,momedu,careid,careage,caresex,carehead,carerel,carecantread,caredu,careladder,careldr4yrs)
+SELECT childidround, dadid,dadage,dadlive,dadyrdied,dadcantread,dadedu,momid,momage,momlive,momyrdied,
+momcantread,momedu,careid,careage,caresex,carehead,carerel,carecantread,caredu,careladder,careldr4yrs
+FROM [Child_Well_Being_Monitor].[dbo].[ethiopia_constructed]
+UNION ALL
+SELECT childidround, dadid,dadage,dadlive,dadyrdied,dadcantread,dadedu,momid,momage,momlive,momyrdied,
+momcantread,momedu,careid,careage,caresex,carehead,carerel,carecantread,caredu,careladder,careldr4yrs
+FROM [Child_Well_Being_Monitor].[dbo].[india_constructed]
+UNION ALL
+SELECT childidround, dadid,dadage,dadlive,dadyrdied,dadcantread,dadedu,momid,momage,momlive,momyrdied,
+momcantread,momedu,careid,careage,caresex,carehead,carerel,carecantread,caredu,careladder,careldr4yrs
+FROM [Child_Well_Being_Monitor].[dbo].[peru_constructed]
+UNION ALL
+SELECT childidround, dadid,dadage,dadlive,dadyrdied,dadcantread,dadedu,momid,momage,momlive,momyrdied,
+momcantread,momedu,careid,careage,caresex,carehead,carerel,carecantread,caredu,careladder,careldr4yrs
+FROM [Child_Well_Being_Monitor].[dbo].[vietnam_constructed];
+
+	--> Table-11
+INSERT INTO [Household_head_characteristics](childroundid,headid,headage,headsex,headedu,headrel)
+SELECT childidround, headid,headage,headsex,headedu,headrel
+FROM [Child_Well_Being_Monitor].[dbo].[ethiopia_constructed]
+UNION ALL
+SELECT childidround, headid,headage,headsex,headedu,headrel
+FROM [Child_Well_Being_Monitor].[dbo].[india_constructed]
+UNION ALL
+SELECT childidround, headid,headage,headsex,headedudu,headrel
+FROM [Child_Well_Being_Monitor].[dbo].[peru_constructed]
+UNION ALL
+SELECT childidround, headid,headage,headsex,headedu,headrel
+FROM [Child_Well_Being_Monitor].[dbo].[vietnam_constructed];
+
+	--> Table-12
+INSERT INTO [Size_composition] (childroundid,male05,male612,male1317,male1860,male61,female05,female612,female1317,female1860,female61,hhsize)
+SELECT childidround,male05,male612,male1317,male1860,male61,female05,female612,female1317,female1860,female61,hhsize
+FROM [Child_Well_Being_Monitor].[dbo].[ethiopia_constructed]
+UNION ALL
+SELECT childidround,male05,male612,male1317,male1860,male61,female05,female612,female1317,female1860,female61,hhsize
+FROM [Child_Well_Being_Monitor].[dbo].[india_constructed]
+UNION ALL
+SELECT childidround,male05,male612,male1317,male1860,male61,female05,female612,female1317,female1860,female61,hhsize
+FROM [Child_Well_Being_Monitor].[dbo].[peru_constructed]
+UNION ALL
+SELECT childidround,male05,male612,male1317,male1860,male61,female05,female612,female1317,female1860,female61,hhsize
+FROM [Child_Well_Being_Monitor].[dbo].[vietnam_constructed];
+
+	--> Table-13
+INSERT INTO [Livestock_land_house_ownership] 
+(childroundid, ownlandhse,ownhouse,aniany,animilk,anidrau,anirumi,anispec,anicowm,anicowt,anidonk
+,anishee,anigoat,anipigs,anipoul,anirabb,aniothr)
+SELECT childidround, ownlandhse,ownhouse,aniany,animilk,anidrau,anirumi,anispec,anicowm,anicowt,anidonk
+,anishee,anigoat,anipigs,anipoul,anirabb,aniothr
+FROM [Child_Well_Being_Monitor].[dbo].[ethiopia_constructed]
+UNION ALL
+SELECT childidround, ownlandhse,ownhouse,aniany,animilk,anidrau,anirumi,anispec,anicowm,anicowt,anidonk
+,anishee,anigoat,anipigs,anipoul,anirabb,aniothr
+FROM [Child_Well_Being_Monitor].[dbo].[india_constructed]
+UNION ALL
+SELECT childidround, ownlandhse,ownhouse,aniany,animilk,anidrau,anirumi,anispec,anicowm,anicowt,anidonk
+,anishee,anigoat,anipigs,anipoul,anirabb,aniothr
+FROM [Child_Well_Being_Monitor].[dbo].[peru_constructed]
+UNION ALL
+SELECT childidround, ownlandhse,ownhouse,aniany,animilk,anidrau,anirumi,anispec,anicowm,anicowt,anidonk
+,anishee,anigoat,anipigs,anipoul,anirabb,aniothr
+FROM [Child_Well_Being_Monitor].[dbo].[vietnam_constructed];
+
+	--> Table-14
+INSERT INTO [Credit_food_security_public_programmes]
+(childroundid,credit,foodsec,hep,psnp_pw,psnp_ds,eap,othprog,resettled)
+SELECT childidround,credit,foodsec,hep,psnp_pw,psnp_ds,eap,othprog,resettled
+FROM [Child_Well_Being_Monitor].[dbo].[ethiopia_constructed];
+
+INSERT INTO [Credit_food_security_public_programmes]
+(childroundid,credit,foodsec,pds,nregs,nregs_work,nregs_allow,rajiv,sabla,sabla_yl,ikp,ikp_child)
+SELECT childidround,credit,foodsec,pds,nregs,nregs_work,nregs_allow,rajiv,sabla,sabla_yl,ikp,ikp_child
+FROM [Child_Well_Being_Monitor].[dbo].[india_constructed];
+
+INSERT INTO [Credit_food_security_public_programmes]
+(childroundid,credit,foodsec,juntos,bonograt,sisgrat_yl,minsa_yl,insur_yl,beca_yl,projoven_yl)
+SELECT childidround,credit,foodsec,juntos,bonograt,sisgrat_yl,minsa_yl,insur_yl,beca_yl,projoven_yl
+FROM [Child_Well_Being_Monitor].[dbo].[peru_constructed];
+
+INSERT INTO [Credit_food_security_public_programmes]
+(childroundid,credit,foodsec,molisa06,molisa09,molisa10,molisa11,molisa12,molisa13,molisa14,molisa15,molisa16)
+SELECT childidround,credit,foodsec,molisa06,molisa09,molisa10,molisa11,molisa12,molisa13,molisa14,molisa15,molisa16
+FROM [Child_Well_Being_Monitor].[dbo].[vietnam_constructed];
+
+	--> Table-15
+INSERT INTO [Household_shocks] (childroundid, shcrime1 ,shcrime2 , shcrime3, shcrime4 ,shcrime5 ,shcrime6 ,shcrime7 ,shcrime8 ,shregul1 ,shregul2 ,shregul3 ,
+shregul4 ,shregul5 ,shecon1 ,shecon2 ,shecon3 ,shecon4 ,shecon5 ,shecon6 ,shecon7 ,shecon8 ,shecon9 ,shecon10 ,shecon11 ,shecon12 ,shecon13 ,shecon14 ,shenv1 ,shenv2 ,shenv3 ,
+shenv4 ,shenv5 ,shenv6 ,shenv7 ,shenv8 ,shenv9 ,shhouse1 ,shhouse2 ,shhouse3 ,shfam1 ,shfam3 ,shfam4 ,shfam5 ,shfam6 ,shfam7 ,shfam8 ,shfam9 ,shfam10 ,
+shfam11 ,shfam12 ,shfam13 ,shfam14 ,shother )
+Select childidround,shcrime1 ,shcrime2 , shcrime3, shcrime4 ,shcrime5 ,shcrime6 ,shcrime7 ,shcrime8 ,shregul1 ,shregul2 ,shregul3 ,
+shregul4 ,shregul5 ,shecon1 ,shecon2 ,shecon3 ,shecon4 ,shecon5 ,shecon6 ,shecon7 ,shecon8 ,shecon9 ,shecon10 ,shecon11 ,shecon12 ,shecon13 ,shecon14 ,shenv1 ,shenv2 ,shenv3 ,
+shenv4 ,shenv5 ,shenv6 ,shenv7 ,shenv8 ,shenv9 ,shhouse1 ,shhouse2 ,shhouse3 ,shfam1 ,shfam3 ,shfam4 ,shfam5 ,shfam6 ,shfam7 ,shfam8 ,shfam9 ,shfam10 ,
+shfam11 ,shfam12 ,shfam13 ,shfam14 ,shother
+From [Child_Well_Being_Monitor].[dbo].[ethiopia_constructed]
+UNION ALL
+Select childidround, shcrime1 ,shcrime2 , shcrime3, shcrime4 ,shcrime5 ,shcrime6 ,shcrime7 ,shcrime8 ,shregul1 ,shregul2 ,shregul3 ,
+shregul4 ,shregul5 ,shecon1 ,shecon2 ,shecon3 ,shecon4 ,shecon5 ,shecon6 ,shecon7 ,shecon8 ,shecon9 ,shecon10 ,shecon11 ,shecon12 ,shecon13 ,shecon14 ,shenv1 ,shenv2 ,shenv3 ,
+shenv4 ,shenv5 ,shenv6 ,shenv7 ,shenv8 ,shenv9 ,shhouse1 ,shhouse2 ,shhouse3 ,shfam1 ,shfam3 ,shfam4 ,shfam5 ,shfam6 ,shfam7 ,shfam8 ,shfam9 ,shfam10 ,
+shfam11 ,shfam12 ,shfam13 ,shfam14 ,shother
+From [Child_Well_Being_Monitor].[dbo].[india_constructed]
+UNION ALL
+Select childidround, shcrime1 ,shcrime2 , shcrime3, shcrime4 ,shcrime5 ,shcrime6 ,null ,shcrime8 ,shregul1 ,shregul2 ,null ,
+shregul4 ,shregul5 ,shecon1 ,shecon2 ,shecon3 ,shecon4 ,shecon5 ,shecon6 ,shecon7 ,shecon8 ,shecon9 ,shecon10 ,shecon11 ,shecon12 ,null ,shecon14 ,shenv1 ,shenv2 ,shenv3 ,
+shenv4 ,shenv5 ,shenv6 ,shenv7 ,shenv8 ,shenv9 ,shhouse1 ,shhouse2 ,shhouse3 ,shfam1 ,shfam3 ,shfam4 ,shfam5 ,shfam6 ,shfam7 ,shfam8 ,shfam9 ,shfam10 ,
+null ,shfam12 ,shfam13 ,shfam14 ,shother
+From [Child_Well_Being_Monitor].[dbo].[peru_constructed]
+UNION ALL
+Select childidround,shcrime1 ,shcrime2 , shcrime3, shcrime4 ,shcrime5 ,shcrime6 ,shcrime7 ,shcrime8 ,shregul1 ,shregul2 ,shregul3 ,
+shregul4 ,shregul5 ,shecon1 ,shecon2 ,shecon3 ,shecon4 ,shecon5 ,shecon6 ,shecon7 ,shecon8 ,shecon9 ,shecon10 ,shecon11 ,shecon12 ,shecon13 ,shecon14 ,shenv1 ,shenv2 ,shenv3 ,
+shenv4 ,shenv5 ,shenv6 ,shenv7 ,shenv8 ,shenv9 ,shhouse1 ,shhouse2 ,shhouse3 ,shfam1 ,shfam3 ,shfam4 ,shfam5 ,shfam6 ,shfam7 ,shfam8 ,shfam9 ,shfam10 ,
+shfam11 ,shfam12 ,shfam13 ,shfam14 ,shother
+From [Child_Well_Being_Monitor].[dbo].[vietnam_constructed];
+
+	--> Table-16
+INSERT INTO [Young_lives_wealth] (childroundid, wi,hq,sv,cd,elecq,toiletq,drwaterq,cookingq)
+SELECT childidround,wi_new,hq_new,sv_new,cd_new,elecq_new,toiletq_new,drwaterq_new,cookingq_new
+FROM [Child_Well_Being_Monitor].[dbo].[ethiopia_constructed]
+UNION ALL
+SELECT childidround,wi,hq,sv,cd,elecq,toiletq,drwaterq,cookingq
+FROM [Child_Well_Being_Monitor].[dbo].[india_constructed]
+UNION ALL
+SELECT childidround,wi,hq,sv,cd,elecq,toiletq,drwaterq,cookingq
+FROM [Child_Well_Being_Monitor].[dbo].[peru_constructed]
+UNION ALL
+SELECT childidround,wi_new,hq_new,sv_new,cd_new,elecq_new,toiletq_new,drwaterq_new,cookingq_new
+FROM [Child_Well_Being_Monitor].[dbo].[vietnam_constructed];
+
+                       ----------->***** Creating reports using Views and Store Procedures *****<-----------
+Drop VIEW General_View;
+CREATE VIEW General_View --GENERAL VIEW FOR DATA DICTIONARY for summarized reports
+AS
+Select b.childroundid AS Child_ID, 
+Gender= CASE WHEN h.sex = 1 THEN 'male' ELSE 'female' END,
+Country=CASE WHEN b.childroundid like 'ET%' THEN 'ETHOPIA' WHEN b.childroundid like 'IN%' THEN 'INDIA'
+WHEN b.childroundid like 'VN%' THEN 'VIETNAM' WHEN b.childroundid like 'PE%' THEN 'PERU' END,
+TypeSite=CASE WHEN t.typesite=1 THEN 'URBAN' ELSE 'RURAL' END,
+BCG_Vaccine=CASE WHEN b.bcg='0' THEN 'NOT RECEIVED' ELSE 'RECEIVED' END,
+Measles_Vaccine=CASE WHEN b.measles='0' THEN 'NOT RECEIVED' ELSE 'RECEIVED' END,
+Polio_Vaccine=CASE WHEN b.polio='0' THEN 'NOT RECEIVED' ELSE 'RECEIVED' END,
+DPT_Vaccine=CASE WHEN b.dpt='0' THEN 'NOT RECEIVED' ELSE 'RECEIVED' END,
+HIB_Vaccine=CASE WHEN b.hib='0' THEN 'NOT RECEIVED' ELSE 'RECEIVED' END,
+Mother_Tetanus_Injection=CASE WHEN b.tetanus='0' THEN 'NOT RECEIVED' ELSE 'RECEIVED' END,
+Water_Availability=CASE WHEN e.drwaterq='0' THEN 'NO' ELSE 'Yes' END, 
+Food_Status =  CASE When d.foodsec = 1 Then 'we always eat enough of what we want' WHEN d.foodsec = 2 THEN 
+'we eat enough but not always what we would like' WHEN d.foodsec = 3 THEN 'we sometimes do not eat enough'
+WHEN d.foodsec = 4 Then 'we frequently do not eat enough' ELSE 'Not Mentioned'  END ,
+Child_Smoke=CASE WHEN f.chsmoke = 1 THEN 'Every day' WHEN f.chsmoke = 2 THEN 'At least once a week'
+WHEN f.chsmoke = 3 THEN 'At least once a month' WHEN f.chsmoke = 4 THEN 'Hardly ever'
+WHEN f.chsmoke = 5 THEN 'I never smoke cigarettes' ELSE 'not mentioned' END, 
+Child_Consume_Alcohol=CASE WHEN f.chalcohol = 0 THEN 'Do not consume alcohol'
+WHEN f.chalcohol = 1 THEN 'Child consume alcohol everyday or at least once a week' ELSE 'not mentioned' END,
+enrol = Case When g.enrol = 1 THEN 'YES' ELSE 'NO' END
+FROM Birth_immunisation AS b inner join Child AS t ON b.childroundid = t.childroundid 
+inner join [dbo].[Credit_food_security_public_programmes] AS d ON t.childroundid = d.childroundid
+inner join [dbo].[Young_lives_wealth] AS e ON d.childroundid = e.childroundid
+inner join [dbo].[Smoking_drinking] AS f ON e.childroundid = f.childroundid
+inner join [dbo].[Education_skills] AS g ON f.childroundid = g.childroundid
+inner join [dbo].[Child_characteristics] AS h ON g.childroundid = h.childroundid
+		--Executing the View
+GO
+select * from General_View;
+
+	--> 1- Urban & Rural Children Data using View
+Drop View RuralUrbanChildren;
+Create View RuralUrbanChildren AS
+select childroundid,SUBSTRING(childroundid,1,2)as Country,childid,clustid,commid,typesite as typesite_code, 
+typesite=CASE
+WHEN typesite = 1 THEN 'Urban'  WHEN typesite = 2 THEN 'Rural' ELSE 'Other'END,
+region,dint,round,yc,chlocation
+from dbo.child
+Where typesite IN (1,2);
+		--Executing the View
+GO
+select * from RuralUrbanChildren;
+
+	--> 2- Urban & Rural Total Children Count using View
+Create View RuralUrbanChildrenTotal
+AS
+select typesite,count(childroundid) as TotalChild from dbo.RuralUrbanChildren group by typesite
+		--Executing the View
+GO
+select * from RuralUrbanChildrenTotal;
+
+	--> 2- Urban & Rural Total Children using Store Procedure
+Drop PROCEDURE getChildbyResidence;
+CREATE PROCEDURE getChildbyResidence @typesite nvarchar(30) AS
+SELECT count(childroundid) as TotalChildren,typesite=CASE
+WHEN typesite = 1 THEN 'Urban'  WHEN typesite = 2 THEN 'Rural' ELSE 'Other' END
+FROM dbo.child WHERE typesite = @typesite group by typesite
+		--Executing the procedure
+GO
+EXEC getChildbyResidence @typesite = '1'
+
+	--> 3- Male & Female children Height & Weight data using Store Procedure
+Drop PROCEDURE ChildSex; 
+CREATE PROCEDURE ChildSex @sex nvarchar(30) AS
+SELECT c.childroundid AS Child_ID, Country=CASE
+WHEN c.childroundid like 'ET%' THEN 'ETHOPIA' WHEN c.childroundid like 'IN%' THEN 'INDIA'
+WHEN c.childroundid like 'VN%' THEN 'VIETNAM'
+WHEN c.childroundid like 'PE%' THEN 'PERU' ELSE 'Not Mentioned' END,
+Gender=CASE WHEN sex = 1 THEN 'male' ELSE 'female' END,a.chweight,a.chheight
+FROM dbo.Child_characteristics c 
+INNER JOIN Anthropometric_info a
+ON c.childroundid=a.childroundid WHERE sex = @sex
+	--Executing the procedure
+GO
+EXEC ChildSex @sex = '1'
+
+	--> 4- Mother & Father Education data of each child using view
+Drop view MotherEducation;
+Create View MotherEducation AS
+Select childroundid,momedu As MotherEdu, momedu=CASE 
+WHEN momedu = 0 THEN 'None' WHEN momedu = 1 THEN 'Grade 1' WHEN momedu = 2 THEN 'Grade 2'
+WHEN momedu = 3 THEN 'Grade 3' WHEN momedu = 4 THEN 'Grade 4' WHEN momedu = 5 THEN 'Grade 5'
+WHEN momedu = 6 THEN 'Grade 6' WHEN momedu = 7 THEN 'Grade 7' WHEN momedu = 8 THEN 'Grade 8'
+WHEN momedu = 9 THEN 'Grade 9' WHEN momedu = 10 THEN 'Grade 10' WHEN momedu = 11 THEN 'Grade 11'
+WHEN momedu = 12 THEN 'Grade 12' WHEN momedu = 13 THEN 'Post-secondary, vocational'
+WHEN momedu = 14 THEN 'University' WHEN momedu = 15 THEN ' Masters, doctorate' WHEN momedu = 28 THEN 'Adult literacy'
+WHEN momedu = 29 THEN 'Religious education' WHEN momedu = 30 THEN 'Other'
+ELSE 'not mentioned' End, momage, dadedu AS FatherEdu,
+dadedu=CASE  WHEN dadedu = 0 THEN 'None' WHEN dadedu = 1 THEN 'Grade 1' WHEN dadedu = 2 THEN 'Grade 2'
+WHEN dadedu = 3 THEN 'Grade 3' WHEN dadedu = 4 THEN 'Grade 4' WHEN dadedu = 5 THEN 'Grade 5'
+WHEN dadedu = 6 THEN 'Grade 6' WHEN dadedu = 7 THEN 'Grade 7' WHEN dadedu = 8 THEN 'Grade 8'
+WHEN dadedu = 9 THEN 'Grade 9' WHEN dadedu = 10 THEN 'Grade 10'
+WHEN dadedu = 11 THEN 'Grade 11' WHEN dadedu = 12 THEN 'Grade 12'
+WHEN dadedu = 13 THEN 'Post-secondary, vocational' WHEN dadedu = 14 THEN 'University'
+WHEN dadedu = 15 THEN ' Masters, doctorate' WHEN dadedu = 28 THEN 'Adult literacy'
+WHEN dadedu = 29 THEN 'Religious education' WHEN dadedu = 30 THEN 'Other' ELSE 'not mentioned' End,dadage  
+From dbo.Mother_father_caregiver_characteristics;
+		--Executing the View
+GO
+select * from MotherEducation;
+
+	--> 5- Collecting data on Conditions (religion,gender,language) using Store Procedure
+Drop PROCEDURE ChildCharactersticsData;
+CREATE PROCEDURE ChildCharactersticsData  @condition nvarchar(25),@country nvarchar(30),@Find nvarchar(25) AS
+IF @condition='religion'
+BEGIN
+ SELECT *, ChildReligion=CASE
+WHEN chlang = 1	THEN  'christian'
+WHEN chlang = 2	THEN  'muslim'
+WHEN	chlang = 3	THEN  'buddhist'
+WHEN	chlang = 4	THEN  'hindu'
+WHEN	chlang = 5	THEN  'catholic'
+WHEN	chlang = 6	THEN  'protestant'
+WHEN	chlang = 7	THEN  'orthodox'
+WHEN	chlang = 8	THEN  'sikh'
+WHEN	chlang = 9	THEN  'evangelist'
+WHEN	chlang = 10	THEN  'mormon'
+WHEN	chlang = 11	THEN  'ancestor worship'
+WHEN	chlang = 12	THEN  'hao hao'
+WHEN	chlang = 13	THEN  'cao dai'
+WHEN	chlang = 14	THEN  'none'
+WHEN	chlang = 15	THEN  'other'
+WHEN	chlang = 99	THEN  'nk'
+	ELSE 'not mentioned'  END
+FROM Child_characteristics  v
+WHERE v.chldrel like @Find +'%' 
+and v.childroundid like @country+'%' END
+	IF @condition='gender'
+BEGIN
+ SELECT *, Gender=CASE
+WHEN sex = 1 THEN 'male' ELSE 'female' END
+FROM Child_characteristics  v
+WHERE v.sex like @Find +'%' and v.childroundid like @country+'%'
+    END
+	IF @condition='language'
+BEGIN
+ SELECT *, ChildLanguage=CASE
+WHEN chlang = 1	THEN 'afarigna'
+WHEN chlang = 2	THEN  'amarigna'
+WHEN chlang = 3	THEN  'agewigna'
+WHEN chlang = 4	THEN  'dawerogna'
+WHEN chlang = 5	THEN  'gedeogna'
+WHEN chlang = 6	THEN  'guraghigna'
+WHEN chlang = 7	THEN  'hadiyigna'
+WHEN chlang = 8	THEN  'harari'
+WHEN chlang = 9	THEN  'kefigna'
+WHEN chlang = 10 THEN  'kembategna'
+WHEN chlang = 11 THEN  'oromifa'
+WHEN chlang = 12 THEN  'sidamigna'
+WHEN chlang = 13 THEN  'siltigna'
+WHEN chlang = 14 THEN  'somaligna'
+WHEN chlang = 15 THEN  'tigrigna'
+WHEN chlang = 16 THEN  'welayitegna'
+WHEN chlang = 17 THEN  'zayigna'
+WHEN chlang = 20 THEN  'other'
+WHEN chlang = 88 THEN  'n/a'
+WHEN chlang = 79 THEN  'refused to answer'
+WHEN chlang = 99 THEN  'missing'
+WHEN chlang = 77 THEN  'nk' ELSE 'not mentioned' END
+FROM Child_characteristics  v
+WHERE v.chlang like @Find +'%' and v.childroundid like @country+'%'
+    END
+    ELSE
+    BEGIN
+        PRINT 'Please give only these three values in condition (religion,gender,language)';
+    END
+	--Executing the procedure
+GO
+EXEC ChildCharactersticsData @condition='language' , @country='ET',@Find='2'
+
+
+	--> 6- Male & Female children enrolled in schools in all 4 countries using View
+Drop VIEW Enrollment;
+Create View Enrollment AS 
+SELECT G.childroundid, sex = Case When sex = 1 THEN 'Male' ELSE 'Female' END,
+enrol = Case When enrol = 1 THEN 'YES' ELSE 'NO' END
+from Child_characteristics G
+INNER JOIN Education_Skills I ON G.childroundid=I.childroundid
+		--Executing the View
+GO
+Select * from Enrollment;
+
+	--> 7- Children know about Sex Education Using View
+Drop View Having_Sex_Education
+Create View Having_Sex_Education AS 
+Select childroundid,Country=CASE
+WHEN childroundid like 'ET%' THEN 'ETHOPIA'
+WHEN childroundid like 'IN%' THEN 'INDIA'
+WHEN childroundid like 'VN%' THEN 'VIETNAM'
+WHEN childroundid like 'PE%' THEN 'PERU' ELSE 'Not Mentioned' END,
+[chrephealth2] = CASE WHEN [chrephealth2] = 0 THEN 'Child does not know condom can prevent disease through sex' ELSE 'Child knows condom can prevent disease through sex' END
+, [chrephealth3] = CASE WHEN [chrephealth3] = 0 THEN 'Child does not know healthy-looking person can pass on a disease sex' ELSE 'Child knows healthy-looking person can pass on a disease sex' END
+, [chrephealth4] = CASE WHEN [chrephealth4] = 1 THEN ' Shop or street vendor' WHEN [chrephealth4] = 2 Then 'Family planning services or health facility'
+WHEN [chrephealth4] = 3 THEN 'Other' WHEN [chrephealth4]= 4 THEN 'I do not know what a condom is/I do not know where to get a condom' ELSE 'Not Mentioned' END
+FROM Smoking_drinking
+		--Executing the View
+GO
+SELECT * FROM Having_Sex_Education;
+
+	--> 8- Children frequency of smoking & consuming alcohol using Store Procedure
+Drop PROCEDURE ChildSmokingDrinking; 
+CREATE PROCEDURE ChildSmokingDrinking  @Child_Smoking nvarchar(30), @Child_Consuming_Alcohol nvarchar(30), @country nvarchar(30)
+AS
+SELECT childroundid AS Child_ID,Country=CASE
+WHEN childroundid like 'ET%' THEN 'ETHOPIA'
+WHEN childroundid like 'IN%' THEN 'INDIA'
+WHEN childroundid like 'VN%' THEN 'VIETNAM'
+WHEN childroundid like 'PE%' THEN 'PERU' ELSE 'Not Mentioned'
+END,Child_Smoke=CASE
+WHEN chsmoke = 1 THEN 'Every day'
+WHEN chsmoke = 2 THEN 'At least once a week'
+WHEN chsmoke = 3 THEN 'At least once a month'
+WHEN chsmoke = 4 THEN 'Hardly ever'
+WHEN chsmoke = 5 THEN 'I never smoke cigarettes'
+ELSE 'not mentioned'
+END, 
+Child_Consume_Alcohol=CASE
+WHEN chalcohol = 0 THEN 'Do not consume alcohol'
+WHEN chalcohol = 1 THEN 'Child consume alcohol everyday or at least once a week'
+ELSE 'not mentioned'
+END
+FROM dbo.Smoking_drinking
+WHERE chsmoke = @Child_Smoking AND chalcohol= @Child_Consuming_Alcohol and childroundid like @country+'%'
+	--Executing the procedure
+Go
+EXEC ChildSmokingDrinking  @Child_Smoking='2' , @Child_Consuming_Alcohol='1' , @country='IN'
+
+	--> 9- Children facing food problem Using View
+DROP VIEW Child_food_problem;
+Create View Child_food_problem 
+AS 
+Select x.childroundid AS Chid_ID,Country=CASE
+WHEN x.childroundid like 'ET%' THEN 'ETHOPIA'
+WHEN x.childroundid like 'IN%' THEN 'INDIA'
+WHEN x.childroundid like 'VN%' THEN 'VIETNAM'
+WHEN x.childroundid like 'PE%' THEN 'PERU'
+END,
+Location=CASE
+WHEN c.typesite=1 THEN 'URBAN' ELSE 'RURAL' 
+END,
+Food_Status =  CASE When foodsec = 1 Then 'we always eat enough of what we want' WHEN foodsec = 2 THEN 
+'we eat enough but not always what we would like' WHEN foodsec = 3 THEN 'we sometimes do not eat enough'
+WHEN foodsec = 4 Then 'we frequently do not eat enough' ELSE 'Not Mentioned'  END 
+FROM Credit_food_security_public_programmes AS x inner join Child AS c ON x.childroundid=c.childroundid
+		--Executing the View
+Go
+SELECT * FROM Child_food_problem;
+
+	--> 10- Study of Survey that children food status according to their region using view
+DROP view Food_Status;
+Create View Food_Status 
+AS 
+SELECT count(A.childroundid) AS Child_ID,Country=CASE
+WHEN B.childroundid like 'ET%' THEN 'ETHOPIA'
+WHEN B.childroundid like 'IN%' THEN 'INDIA'
+WHEN B.childroundid like 'VN%' THEN 'VIETNAM'
+WHEN B.childroundid like 'PE%' THEN 'PERU' ELSE 'Not Mentioned'
+END,Location=CASE
+WHEN typesite=1 THEN 'URBAN' ELSE 'RURAL' END, 
+Food_Status =  CASE When foodsec = 1 Then 'we always eat enough of what we want' WHEN foodsec = 2 THEN 
+'we eat enough but not always what we would like' WHEN foodsec = 3 THEN 'we sometimes do not eat enough'
+WHEN foodsec = 4 Then 'we frequently do not eat enough' ELSE 'Not Mentioned'  END 
+FROM Credit_food_security_public_programmes AS A INNER JOIN Child AS B ON B.childroundid = A.childroundid 
+		--Executing the View
+Go
+select * from Food_Status;
+
+	--> 10- Access to safe Water availability according to Typesite & Country using store procedure
+Drop Procedure SafeWater_Availability;
+CREATE PROCEDURE SafeWater_Availability @Water_Availability nvarchar(30), @Typesite nvarchar(30), @Country nvarchar(30) AS
+SELECT A.childroundid as Child_ID, Location=CASE
+WHEN typesite=1 THEN 'URBAN' ELSE 'RURAL' END,
+Water_Availability=CASE WHEN drwaterq='0' THEN 'NO' ELSE 'Yes' END
+FROM Child AS A INNER JOIN Young_lives_wealth AS B ON B.childroundid = A.childroundid 
+where drwaterq= @Water_Availability AND typesite=@Typesite AND A.childroundid like @country+'%'
+		--Executing the Procedure
+GO
+EXEC SafeWater_Availability @Water_Availability='0', @Typesite='2', @Country='IN';
+
+	--> 11- Summarized Report- Access to safe Water availability according to  Country vise
+Drop VIEW SAFE_DRINKING_WATER_AVAILABILITY;
+CREATE VIEW SAFE_DRINKING_WATER_AVAILABILITY AS
+select  v.Country,(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.Water_Availability = 'NO' and v.Country=b.Country)as [Water Available],
+(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.Water_Availability = 'YES' and v.Country=b.Country)as [Water NOT Available] 
+from dbo.General_View v where Country is not null group by Country
+		--Executing VIEW
+GO
+SELECT * From SAFE_DRINKING_WATER_AVAILABILITY;
+
+	--> 12- Summarized Report- Child & Mother Vaccination status Country vise
+DROP VIEW VACCINATION_STATUS;
+CREATE VIEW VACCINATION_STATUS AS
+select v.Country,(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.BCG_Vaccine = 'RECEIVED' and v.Country=b.Country)as [BCG RECEIVED],
+(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.BCG_Vaccine = 'NOT RECEIVED' and v.Country=b.Country)as [BCG NOT RECEIVED],
+(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.Measles_Vaccine = 'RECEIVED' and v.Country=b.Country)as [Measles RECEIVED],
+(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.Measles_Vaccine = 'NOT RECEIVED' and v.Country=b.Country)as [Measles NOT RECEIVED],
+(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.Polio_Vaccine = 'RECEIVED' and v.Country=b.Country)as [Polio RECEIVED],
+(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.Polio_Vaccine = 'NOT RECEIVED' and v.Country=b.Country)as [Polio NOT RECEIVED],
+(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.DPT_Vaccine = 'RECEIVED' and v.Country=b.Country)as [DPT RECEIVED],
+(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.DPT_Vaccine = 'NOT RECEIVED' and v.Country=b.Country)as [DPT NOT RECEIVED],
+(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.HIB_Vaccine = 'RECEIVED' and v.Country=b.Country)as [HIB RECEIVED],
+(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.HIB_Vaccine = 'NOT RECEIVED' and v.Country=b.Country)as [HIB NOT RECEIVED],
+(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.Mother_Tetanus_Injection = 'RECEIVED' and v.Country=b.Country)as [Mother Tetanus RECEIVED],
+(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.Mother_Tetanus_Injection = 'NOT RECEIVED' and v.Country=b.Country)as [Mother Tetanus NOT RECEIVED]
+from dbo.General_View v where Country is not null group by Country
+	--> Executing the View
+GO
+SELECT * FROM VACCINATION_STATUS;
+
+	--> 13- Summarized Report- Child FOOD STATUS by Country vise
+DROP VIEW CHILD_FOOD_STATUS;
+CREATE VIEW CHILD_FOOD_STATUS AS
+select v.Country,(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.Food_Status = 'we always eat enough of what we want' and v.Country=b.Country)as [Eat Enough],
+(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.Food_Status = 'we eat enough but not always what we would like' and v.Country=b.Country)as [Eat Enough but not always],
+(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.Food_Status = 'we sometimes do not eat enough' and v.Country=b.Country)as [Sometimes don't eat enough],
+(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.Food_Status = 'we frequently do not eat enough' and v.Country=b.Country)as [Mostly don't eat enough]
+from dbo.General_View v where Country is not null group by Country
+		--> Executing the View
+GO
+SELECT * FROM CHILD_FOOD_STATUS;
+
+	--> 14- Summarized Report- Children frequency of smoking & consuming alcohol by TypeSite
+DROP VIEW CHILD_SMOKING_AND_DRINKING;
+CREATE VIEW CHILD_SMOKING_AND_DRINKING AS
+select v.TypeSite,(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.Child_Smoke = 'Every day' and v.TypeSite=b.TypeSite)as [Smoke Daily],
+(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.Child_Smoke = 'At least once a week' and v.TypeSite=b.TypeSite)as [Smoke Once a Week],
+(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.Child_Smoke = 'At least once a month' and v.TypeSite=b.TypeSite)as [SmokeOnce a Month],
+(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.Child_Smoke = 'Hardly ever' and v.TypeSite=b.TypeSite)as [Smoke Hardly Ever],
+(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.Child_Smoke = 'I never smoke cigarettes' and v.TypeSite=b.TypeSite)as [Never Smoke],
+(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.Child_Consume_Alcohol = 'Do not consume alcohol' and v.TypeSite=b.TypeSite)as [Don't Consume Alcohol],
+(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.Child_Consume_Alcohol = 'Child consume alcohol everyday or at least once a week' and v.TypeSite=b.TypeSite)as [Consume Alcohol]
+from dbo.General_View v where Country is not null group by TypeSite
+		--> Executing the View
+GO
+SELECT * FROM CHILD_SMOKING_AND_DRINKING;
+
+	--> 15- Summarized Report- Male & Female children enrolled in schools in all 4 countries
+DROP VIEW CHILDREN_ENROLLED_IN_SCHOOL;
+CREATE VIEW CHILDREN_ENROLLED_IN_SCHOOL AS
+select v.TypeSite,(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.enrol = 'YES' and Gender ='male' and v.TypeSite=b.TypeSite)as [Male Enrolled],
+(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.enrol = 'YES' and Gender ='female' and v.TypeSite=b.TypeSite)as [Female Enrolled],
+(select DISTINCT(count(Child_ID)) from  dbo.General_View b where b.enrol = 'NO' and v.TypeSite=b.TypeSite)as [Not Enrolled]
+from dbo.General_View v where Country is not null group by TypeSite
+		--> Executing the View
+GO
+SELECT * FROM CHILDREN_ENROLLED_IN_SCHOOL;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                             
+				------------>***** TASK 2 *****<------------
+---- All tables & columns are referenced by data dictionary and technical guide
+
+--> Creating Database 
+create database Vietnam_EduSurvey;
+
+--> Creating Tables and relationships with Primary keys & Foreign keys
+	--> Table-1
+DROP TABLE General_INFO;
+CREATE TABLE General_INFO
+(UNIQUEID nvarchar(50) NOT null PRIMARY KEY, SCHOOLID nvarchar(max) null,CLASSID nvarchar(max) null,STUDENTID nvarchar(max) null,
+YLCHILDID nvarchar(max) null,PROVINCE nvarchar(max) null,DISTRICTCODE nvarchar(max) null,LOCALITY nvarchar(max) null);
+
+	--> Table-2
+DROP TABLE Student_Quest;
+CREATE TABLE Student_Quest
+(GENDER  nvarchar(max) null,AGE nvarchar(max) null,ETHNICITY nvarchar(max) null,ABSENT_DAYS nvarchar(max) null,
+MOM_READ nvarchar(max) null,MOM_EDUC nvarchar(max) null,DAD_READ nvarchar(max) null,DAD_EDUC nvarchar(max) null,
+STDYLCHD nvarchar(max) null,STDCMPLT nvarchar(max) null,STDDINT nvarchar(max) null,STDLIV nvarchar(max) null,
+STDLNGHM nvarchar(max) null,STDMEAL nvarchar(max) null,STDHLTH1 nvarchar(max) null,STDHLTH2 nvarchar(max) null,
+STDHLTH3 nvarchar(max) null,STDHLTH4 nvarchar(max) null,STDHLTH5 nvarchar(max) null,STDHLTH6 nvarchar(max) null,
+STDHLTH10 nvarchar(max) null,STPPLHM nvarchar(max) null,STSIBOLD nvarchar(max) null,STSIBYNG nvarchar(max) null,
+STNMBOOK nvarchar(max) null,STPLSTDY nvarchar(max) null,STHVMTEL nvarchar(max) null,STHVRADO nvarchar(max) null,
+STHVTELE nvarchar(max) null,STHVBIKE nvarchar(max) null,STHVMTBK nvarchar(max) null,STHVDESK nvarchar(max) null,
+STHVCHR nvarchar(max) null,STHVLAMP nvarchar(max) null,STHVEFAN nvarchar(max) null,STHVAIRC nvarchar(max) null,
+STHVCAR nvarchar(max) null,STHVCOMP nvarchar(max) null,STHVINTR nvarchar(max) null,STHVFRDG nvarchar(max) null,
+STHVMCRO nvarchar(max) null,STHVDVD nvarchar(max) null,STHVCBLE nvarchar(max) null,STTMSCH nvarchar(max) null,
+STEATLNC nvarchar(max) null,STPAYLNC nvarchar(max) null,STRPTCL1 nvarchar(max) null,STRPTCL6 nvarchar(max) null,
+STRPTCL10 nvarchar(max) null,STTLTSCH nvarchar(max) null,STAGEENG nvarchar(max) null,STITMOW1 nvarchar(max) null,
+STITMOW2 nvarchar(max) null,STITMOW3 nvarchar(max) null,STITMOW4 nvarchar(max) null,STITMOW5 nvarchar(max) null,
+STITMOW6 nvarchar(max) null,STITMOW7 nvarchar(max) null,STITMOW8 nvarchar(max) null,STBRWBK nvarchar(max) null,
+STREADFN nvarchar(max) null,STREADCH nvarchar(max) null,STREADLR nvarchar(max) null,STPLHLRD nvarchar(max) null,
+STPLHL01 nvarchar(max) null,STPLHL02 nvarchar(max) null,STPLHL03 nvarchar(max) null,STPLHL04 nvarchar(max) null,
+STPLHL05 nvarchar(max) null,STPLHL06 nvarchar(max) null,STPLHL07 nvarchar(max) null,STSPEN01 nvarchar(max) null,
+STSPEN02 nvarchar(max) null,STSPEN03 nvarchar(max) null,STSPEN04 nvarchar(max) null,STSPEN05 nvarchar(max) null,
+STATEN01 nvarchar(max) null,STATEN02 nvarchar(max) null,STATEN03 nvarchar(max) null,STATEN04 nvarchar(max) null,
+STNONSCL nvarchar(max) null,STGR1001 nvarchar(max) null,STGR1002 nvarchar(max) null,STGR1003 nvarchar(max) null,
+STGR1004 nvarchar(max) null,STGR1005 nvarchar(max) null,STGR1006 nvarchar(max) null,STGR1007 nvarchar(max) null,
+STGR1008 nvarchar(max) null,STGR1009 nvarchar(max) null,STGR1011 nvarchar(max) null,STHGHGRD nvarchar(max) null,
+UNIQUEID nvarchar(50) FOREIGN KEY REFERENCES dbo.General_INFO);
+	--> Table-3
+DROP TABLE Student_CognitiveTest;
+CREATE TABLE Student_CognitiveTest
+(ENG_TEST nvarchar(max) null, ENG_ITEM1 nvarchar(max) null, ENG_ITEM2 nvarchar(max) null, ENG_ITEM3 nvarchar(max) null, 
+ENG_ITEM4 nvarchar(max) null, ENG_ITEM5 nvarchar(max) null, ENG_ITEM6 nvarchar(max) null, ENG_ITEM7 nvarchar(max) null, 
+ENG_ITEM8 nvarchar(max) null, ENG_ITEM9 nvarchar(max) null, ENG_ITEM10 nvarchar(max) null,ENG_ITEM11 nvarchar(max) null, 
+ENG_ITEM12 nvarchar(max) null, ENG_ITEM13 nvarchar(max) null, ENG_ITEM14 nvarchar(max) null, ENG_ITEM15 nvarchar(max) null, 
+ENG_ITEM16 nvarchar(max) null, ENG_ITEM17 nvarchar(max) null, ENG_ITEM18 nvarchar(max) null, ENG_ITEM19 nvarchar(max) null, 
+ENG_ITEM20 nvarchar(max) null, ENG_ITEM21 nvarchar(max) null, ENG_ITEM22 nvarchar(max) null, ENG_ITEM23 nvarchar(max) null, 
+ENG_ITEM24 nvarchar(max) null, ENG_ITEM25 nvarchar(max) null, ENG_ITEM26 nvarchar(max) null, ENG_ITEM27 nvarchar(max) null, 
+ENG_ITEM28 nvarchar(max) null, ENG_ITEM29 nvarchar(max) null, ENG_ITEM30 nvarchar(max) null, ENG_ITEM31 nvarchar(max) null, 
+ENG_ITEM32 nvarchar(max) null, ENG_ITEM33 nvarchar(max) null, ENG_ITEM34 nvarchar(max) null, ENG_ITEM35 nvarchar(max) null, 
+ENG_ITEM36 nvarchar(max) null, ENG_ITEM37 nvarchar(max) null, ENG_ITEM38 nvarchar(max) null, ENG_ITEM39 nvarchar(max) null, 
+ENG_ITEM40 nvarchar(max) null, ENG_RAWSCORE nvarchar(max) null, MATH_TEST nvarchar(max) null, MATH_ITEM1 nvarchar(max) null, 
+MATH_ITEM2 nvarchar(max) null, MATH_ITEM3 nvarchar(max) null, MATH_ITEM4 nvarchar(max) null, MATH_ITEM5 nvarchar(max) null, 
+MATH_ITEM6 nvarchar(max) null, MATH_ITEM7 nvarchar(max) null, MATH_ITEM8 nvarchar(max) null, MATH_ITEM9 nvarchar(max) null, 
+MATH_ITEM10 nvarchar(max) null,MATH_ITEM11 nvarchar(max) null, MATH_ITEM12 nvarchar(max) null, MATH_ITEM13 nvarchar(max) null, 
+MATH_ITEM14 nvarchar(max) null, MATH_ITEM15 nvarchar(max) null, MATH_ITEM16 nvarchar(max) null, MATH_ITEM17 nvarchar(max) null, 
+MATH_ITEM18 nvarchar(max) null, MATH_ITEM19 nvarchar(max) null, MATH_ITEM20 nvarchar(max) null, MATH_ITEM21 nvarchar(max) null, 
+MATH_ITEM22 nvarchar(max) null, MATH_ITEM23 nvarchar(max) null, MATH_ITEM24 nvarchar(max) null, MATH_ITEM25 nvarchar(max) null, 
+MATH_ITEM26 nvarchar(max) null, MATH_ITEM27 nvarchar(max) null, MATH_ITEM28 nvarchar(max) null, MATH_ITEM29 nvarchar(max) null, 
+MATH_ITEM30 nvarchar(max) null, MATH_ITEM31 nvarchar(max) null, MATH_ITEM32 nvarchar(max) null, MATH_ITEM33 nvarchar(max) null, 
+MATH_ITEM34 nvarchar(max) null, MATH_ITEM35 nvarchar(max) null, MATH_ITEM36 nvarchar(max) null, MATH_ITEM37 nvarchar(max) null, 
+MATH_ITEM38 nvarchar(max) null, MATH_ITEM39 nvarchar(max) null, MATH_ITEM40 nvarchar(max) null, MATH_RAWSCORE nvarchar(max) null,
+UNIQUEID nvarchar(50) FOREIGN KEY REFERENCES dbo.General_INFO);
+
+	--> Table-4
+DROP TABLE Class_Roaster;
+CREATE TABLE Class_Roaster
+(GRLENRL nvarchar(max) null ,BOYENRL nvarchar(max) null ,TTLENRL nvarchar(max) null ,TGRLENRL nvarchar(max) null , 
+TBOYENRL  nvarchar(max) null ,TTTLENRL nvarchar(max) null ,ATDTMSY nvarchar(max) null ,ATDDFSY  nvarchar(max) null ,
+TGMTHENG nvarchar(max) null ,SCALLCT  nvarchar(max) null ,GRPABLTY  nvarchar(max) null ,CLSORD1 nvarchar(max) null ,
+CLSORD2 nvarchar(max) null ,SCAVLB1 nvarchar(max) null ,SCAVLB2 nvarchar(max) null ,SCAVLB3 nvarchar(max) null ,
+SCAVLB4 nvarchar(max) null ,SCAVLB5 nvarchar(max) null ,SCAVLB6 nvarchar(max) null ,SCAVLB7 nvarchar(max) null ,
+SCAVLB8 nvarchar(max) null ,SCAVLB9 nvarchar(max) null ,SCAVLB10 nvarchar(max) null ,SCPRDDAY nvarchar(max) null ,
+SCLNONPR nvarchar(max) null ,SCMNMTIN  nvarchar(max) null ,SCMNENIN  nvarchar(max) null ,SCTXTMTH  nvarchar(max) null ,
+SCTXTENG nvarchar(max) null, 
+UNIQUEID nvarchar(50) FOREIGN KEY REFERENCES dbo.General_INFO);
+
+	--> Table-5
+DROP TABLE Principal_Quest;
+CREATE TABLE Principal_Quest
+(NUMG10CLS nvarchar(max) null,HTNTCMP nvarchar(max) null,HTDINT nvarchar(max) null,
+HTAGE nvarchar(max) null,HTSEX nvarchar(max) null,HTETHGRP nvarchar(max) null,
+HTRELGN nvarchar(max) null,HTMTHTNG nvarchar(max) null,HTFRMPRV nvarchar(max) null,
+HTCURRLE nvarchar(max) null,HTYRSHT nvarchar(max) null,HTLVLEDC nvarchar(max) null,
+HTLVLTCH nvarchar(max) null,HTEXCTCH nvarchar(max) null,HTTYPSCH nvarchar(max) null,
+HTLWSGRD nvarchar(max) null,HTHGHGRD nvarchar(max) null,HTNMSTEN nvarchar(max) null,
+HTNMETST nvarchar(max) null,HTYREST nvarchar(max) null,HTP135CM nvarchar(max) null,
+HTPRDIST nvarchar(max) null,HTBOARD nvarchar(max) null,HTSCHAVL nvarchar(max) null,
+HTMRNSTR nvarchar(max) null,HTMRNEND nvarchar(max) null,HTAFTSTR nvarchar(max) null,
+HTAFTEND nvarchar(max) null,HTREGTCH nvarchar(max) null,HTNONCMP nvarchar(max) null,
+HTEXTCUR nvarchar(max) null,HTNOACT nvarchar(max) null,HTNOCMCH nvarchar(max) null,
+HTNOCMCL nvarchar(max) null,HTRQNMST nvarchar(max) null,HTCENMST nvarchar(max) null,
+HTPTNMST nvarchar(max) null,HTRQMATH nvarchar(max) null,HTRQENG nvarchar(max) null,
+HTTCHAPP nvarchar(max) null,HTREWTC1 nvarchar(max) null,HTREWTC2 nvarchar(max) null,
+HTREWTC4 nvarchar(max) null,HTREWTC5 nvarchar(max) null,HTREWTC6 nvarchar(max) null,
+HTREWTC7 nvarchar(max) null,HTREWTC8 nvarchar(max) null,HTDISTC1 nvarchar(max) null,
+HTDISTC2 nvarchar(max) null,HTDISTC3 nvarchar(max) null,HTDISTC4 nvarchar(max) null,
+HTDISTC6 nvarchar(max) null,HTDISTC7 nvarchar(max) null,HTDISTC8 nvarchar(max) null,
+HTDISTC0 nvarchar(max) null,HTGNADMN nvarchar(max) null,HTACRARE nvarchar(max) null,
+HTACRAETH nvarchar(max) null,HTACRAGND nvarchar(max) null,HTACRAPAY nvarchar(max) null,
+HTACRAEXM nvarchar(max) null,HTACRAOTH nvarchar(max) null,HTACRAALL nvarchar(max) null,
+HTAMPAID1 nvarchar(max) null,HTEXM011 nvarchar(max) null,HTEXM021 nvarchar(max) null,
+HTEXM031 nvarchar(max) null,HTEXM041 nvarchar(max) null,HTEXM051 nvarchar(max) null,
+HTEXM061 nvarchar(max) null,HTEXM001 nvarchar(max) null,HTAMPAID2 nvarchar(max) null,
+HTEXM012 nvarchar(max) null,HTEXM022 nvarchar(max) null,HTEXM032 nvarchar(max) null,
+HTEXM042 nvarchar(max) null,HTEXM052 nvarchar(max) null,HTEXM062 nvarchar(max) null,
+HTEXM002 nvarchar(max) null,HTAMPAID3 nvarchar(max) null,HTEXM013 nvarchar(max) null,
+HTEXM023 nvarchar(max) null,HTEXM033 nvarchar(max) null,HTEXM043 nvarchar(max) null,
+HTEXM053 nvarchar(max) null,HTEXM063 nvarchar(max) null,HTEXM003 nvarchar(max) null,
+HTAMPAID4 nvarchar(max) null,HTEXM014 nvarchar(max) null,HTEXM024 nvarchar(max) null,
+HTEXM034 nvarchar(max) null,HTEXM044 nvarchar(max) null,HTEXM054 nvarchar(max) null,
+HTEXM064 nvarchar(max) null,HTEXM004 nvarchar(max) null,HTAMPAID5 nvarchar(max) null,
+HTEXM015 nvarchar(max) null,HTEXM025 nvarchar(max) null,HTEXM035 nvarchar(max) null,
+HTEXM045 nvarchar(max) null,HTEXM055 nvarchar(max) null,HTEXM065 nvarchar(max) null,
+HTEXM005 nvarchar(max) null,HTAMPAID6 nvarchar(max) null,HTEXM016 nvarchar(max) null,
+HTEXM026 nvarchar(max) null,HTEXM036 nvarchar(max) null,HTEXM046 nvarchar(max) null,
+HTEXM056 nvarchar(max) null,HTEXM066 nvarchar(max) null,HTEXM006 nvarchar(max) null,
+HTAMPAID7 nvarchar(max) null,HTEXM017 nvarchar(max) null,HTEXM027 nvarchar(max) null,
+HTEXM037 nvarchar(max) null,HTEXM047 nvarchar(max) null,HTEXM057 nvarchar(max) null,
+HTEXM067 nvarchar(max) null,HTEXM007 nvarchar(max) null,HTAMPAID8 nvarchar(max) null,
+HTEXM018 nvarchar(max) null,HTEXM028 nvarchar(max) null,HTEXM038 nvarchar(max) null,
+HTEXM048 nvarchar(max) null,HTEXM058 nvarchar(max) null,HTEXM068 nvarchar(max) null,
+HTEXM008 nvarchar(max) null,HTAMPAID9 nvarchar(max) null,HTEXM019 nvarchar(max) null,
+HTEXM029 nvarchar(max) null,HTEXM039 nvarchar(max) null,HTEXM049 nvarchar(max) null,
+HTEXM059 nvarchar(max) null,HTEXM069 nvarchar(max) null,HTEXM009 nvarchar(max) null,
+HTAMPAID10 nvarchar(max) null,HTEXM0110 nvarchar(max) null,HTEXM0210 nvarchar(max) null,
+HTEXM0310 nvarchar(max) null,HTEXM0410 nvarchar(max) null,HTEXM0510 nvarchar(max) null,
+HTEXM0610 nvarchar(max) null,HTEXM0010 nvarchar(max) null,HTAMPAID11 nvarchar(max) null,
+HTEXM0111 nvarchar(max) null,HTEXM0211 nvarchar(max) null,HTEXM0311 nvarchar(max) null,
+HTEXM0411 nvarchar(max) null,HTEXM0511 nvarchar(max) null,HTEXM0611 nvarchar(max) null,
+HTEXM0011 nvarchar(max) null,HTAMPAID12 nvarchar(max) null,HTEXM0112 nvarchar(max) null,
+HTEXM0212 nvarchar(max) null,HTEXM0312 nvarchar(max) null,HTEXM0412 nvarchar(max) null,
+HTEXM0512 nvarchar(max) null,HTEXM0612 nvarchar(max) null,HTEXM0012 nvarchar(max) null,
+HTENGR10 nvarchar(max) null,HTENBY10 nvarchar(max) null,HTTLGR10 nvarchar(max) null,
+HTTLBY10 nvarchar(max) null,HTENGR11 nvarchar(max) null,HTENBY11 nvarchar(max) null,
+HTTLGR11 nvarchar(max) null,HTTLBY11 nvarchar(max) null,HTENGR12 nvarchar(max) null,
+HTENBY12 nvarchar(max) null,HTTLGR12 nvarchar(max) null,HTTLBY12 nvarchar(max) null,
+HTNMCL10 nvarchar(max) null,HTNMCL11 nvarchar(max) null,HTNMCL12 nvarchar(max) null,
+HTALLC10 nvarchar(max) null,HTPRTEXP nvarchar(max) null,HTENTOT10 nvarchar(max) null,
+UNIQUEID nvarchar(50) FOREIGN KEY REFERENCES dbo.General_INFO);
+
+
+	----------------> ***** DATA INSERTION INTO TABLES ***** <---------------- 
+	--> Data Insertion into Table-1
+Insert INTO General_INFO
+(UNIQUEID ,SCHOOLID,CLASSID,STUDENTID ,YLCHILDID,PROVINCE ,DISTRICTCODE,LOCALITY )
+select UNIQUEID ,SCHOOLID,CLASSID,STUDENTID ,YLCHILDID,PROVINCE ,DISTRICTCODE,LOCALITY 
+from [dbo].[vietnam_wave1];
+
+	--> Data Insertion into Table-2
+INSERT INTO Student_Quest(GENDER ,AGE,ETHNICITY,ABSENT_DAYS,MOM_READ,MOM_EDUC,DAD_READ,DAD_EDUC,STDYLCHD,STDCMPLT,STDDINT,STDLIV,STDLNGHM,STDMEAL,STDHLTH2,STDHLTH3,STDHLTH4,STDHLTH6,
+STPPLHM,STSIBOLD,STSIBYNG,STNMBOOK,STPLSTDY,STHVMTEL,STHVRADO,STHVTELE,STHVBIKE,STHVMTBK,STHVDESK,STHVCHR,STHVLAMP,STHVEFAN,STHVAIRC,STHVCAR,STHVCOMP,STHVINTR,
+STHVFRDG,STHVMCRO,STHVDVD,STHVCBLE,STTMSCH,STEATLNC,STPAYLNC,STRPTCL1,STRPTCL6,STRPTCL10,STTLTSCH,STAGEENG,STITMOW1,STITMOW3,STITMOW4,STITMOW5,STITMOW6,STITMOW8,STREADFN,
+STREADCH,STREADLR,STPLHLRD,STPLHL01,STPLHL02,STPLHL03,STPLHL04,STPLHL05,STPLHL06,STPLHL07,STSPEN01,STSPEN02,STSPEN03,STSPEN04,STSPEN05,STATEN01,STATEN02,STATEN03,
+STATEN04,STNONSCL,STGR1001,STGR1002,STGR1003,STGR1004,STGR1005,STGR1006,STGR1007,STGR1008,STGR1009,STGR1011,STHGHGRD,UNIQUEID)
+Select GENDER ,AGE,ETHNICITY,ABSENT_DAYS,MOM_READ,MOM_EDUC,DAD_READ,DAD_EDUC,STDYLCHD,STDCMPLT,STDDINT,STDLIV,STDLNGHM,STDMEAL,STDHLTH2,STDHLTH3,STDHLTH4,STDHLTH6,
+STPPLHM,STSIBOLD,STSIBYNG,STNMBOOK,STPLSTDY,STHVMTEL,STHVRADO,STHVTELE,STHVBIKE,STHVMTBK,STHVDESK,STHVCHR,STHVLAMP,STHVEFAN,STHVAIRC,STHVCAR,STHVCOMP,STHVINTR,
+STHVFRDG,STHVMCRO,STHVDVD,STHVCBLE,STTMSCH,STEATLNC,STPAYLNC,STRPTCL1,STRPTCL6,STRPTCL10,STTLTSCH,STAGEENG,STITMOW1,STITMOW3,STITMOW4,STITMOW5,STITMOW6,STITMOW8,STREADFN,
+STREADCH,STREADLR,STPLHLRD,STPLHL01,STPLHL02,STPLHL03,STPLHL04,STPLHL05,STPLHL06,STPLHL07,STSPEN01,STSPEN02,STSPEN03,STSPEN04,STSPEN05,STATEN01,STATEN02,STATEN03,
+STATEN04,STNONSCL,STGR1001,STGR1002,STGR1003,STGR1004,STGR1005,STGR1006,STGR1007,STGR1008,STGR1009,STGR1011,STHGHGRD,UNIQUEID
+from [dbo].[vietnam_wave1];
+	--> Data Insertion into Table-3
+INSERT INTO dbo.Student_CognitiveTest(ENG_TEST , ENG_ITEM1 , ENG_ITEM2 , ENG_ITEM3 , ENG_ITEM4 , ENG_ITEM5 , ENG_ITEM7 , ENG_ITEM8 , ENG_ITEM10 ,ENG_ITEM11 , ENG_ITEM12 , ENG_ITEM13 , 
+ENG_ITEM14 , ENG_ITEM15 , ENG_ITEM16 , ENG_ITEM17 , ENG_ITEM18 , ENG_ITEM19 , ENG_ITEM20 , ENG_ITEM21 , ENG_ITEM22 , ENG_ITEM23 , ENG_ITEM24 , 
+ENG_ITEM25 , ENG_ITEM26 , ENG_ITEM27 , ENG_ITEM28 , ENG_ITEM29 , ENG_ITEM30 , ENG_ITEM31 , ENG_ITEM32 , ENG_ITEM33 , ENG_ITEM34 , ENG_ITEM35 , 
+ENG_ITEM36 , ENG_ITEM37 , ENG_ITEM39 , ENG_ITEM40 , ENG_RAWSCORE , MATH_TEST , MATH_ITEM1 , MATH_ITEM2 , MATH_ITEM3 , MATH_ITEM4 , MATH_ITEM5 , MATH_ITEM6 ,
+ MATH_ITEM7 , MATH_ITEM8 , MATH_ITEM9 , MATH_ITEM10 ,MATH_ITEM11 , MATH_ITEM12 , MATH_ITEM13 , MATH_ITEM14 , MATH_ITEM15 ,MATH_ITEM16, MATH_ITEM17 , MATH_ITEM18 ,
+MATH_ITEM19 , MATH_ITEM20 , MATH_ITEM21 , MATH_ITEM22 , MATH_ITEM23 , MATH_ITEM24 , MATH_ITEM25 , MATH_ITEM26 , MATH_ITEM27 , MATH_ITEM28 ,MATH_ITEM29, MATH_ITEM30,
+MATH_ITEM31,MATH_ITEM32 , MATH_ITEM33 , MATH_ITEM34 ,MATH_ITEM35 , MATH_ITEM36 , MATH_ITEM37 , MATH_ITEM38 , MATH_ITEM39 , MATH_ITEM40 , MATH_RAWSCORE ,UNIQUEID)
+SELECT ENG_TEST , ENG_ITEM1 , ENG_ITEM2 , ENG_ITEM3 , ENG_ITEM4 , ENG_ITEM5 , ENG_ITEM7 , ENG_ITEM8 , ENG_ITEM10 ,ENG_ITEM11 , ENG_ITEM12 , ENG_ITEM13 , 
+ENG_ITEM14 , ENG_ITEM15 , ENG_ITEM16 , ENG_ITEM17 , ENG_ITEM18 , ENG_ITEM19 , ENG_ITEM20 , ENG_ITEM21 , ENG_ITEM22 , ENG_ITEM23 , ENG_ITEM24 , 
+ENG_ITEM25 , ENG_ITEM26 , ENG_ITEM27 , ENG_ITEM28 , ENG_ITEM29 , ENG_ITEM30 , ENG_ITEM31 , ENG_ITEM32 , ENG_ITEM33 , ENG_ITEM34 , ENG_ITEM35 , 
+ENG_ITEM36 , ENG_ITEM37 , ENG_ITEM39 , ENG_ITEM40 , ENG_RAWSCORE , MATH_TEST , MATH_ITEM1 , MATH_ITEM2 , MATH_ITEM3 , MATH_ITEM4 , MATH_ITEM5 , MATH_ITEM6 ,
+ MATH_ITEM7 , MATH_ITEM8 , MATH_ITEM9 , MATH_ITEM10 ,MATH_ITEM11 , MATH_ITEM12 , MATH_ITEM13 , MATH_ITEM14 , MATH_ITEM15 ,MATH_ITEM16, MATH_ITEM17 , MATH_ITEM18 ,
+MATH_ITEM19 , MATH_ITEM20 , MATH_ITEM21 , MATH_ITEM22 , MATH_ITEM23 , MATH_ITEM24 , MATH_ITEM25 , MATH_ITEM26 , MATH_ITEM27 , MATH_ITEM28 ,MATH_ITEM29, MATH_ITEM30,
+MATH_ITEM31,MATH_ITEM32 , MATH_ITEM33 , MATH_ITEM34 ,MATH_ITEM35 , MATH_ITEM36 , MATH_ITEM37 , MATH_ITEM38 , MATH_ITEM39 , MATH_ITEM40 , MATH_RAWSCORE ,UNIQUEID
+FROM [dbo].[vietnam_wave1];
+	--> Data Insertion into Table-4
+INSERT INTO Class_Roaster(GRLENRL ,BOYENRL ,TTLENRL ,TGRLENRL , TBOYENRL  ,TTTLENRL ,ATDTMSY ,ATDDFSY  ,TGMTHENG ,SCALLCT  ,CLSORD1 ,CLSORD2 ,SCAVLB1 ,
+SCAVLB2 ,SCAVLB3 ,SCAVLB4 ,SCAVLB5 ,SCAVLB6 ,SCAVLB7 ,SCAVLB8 ,SCAVLB9 ,SCAVLB10 ,SCPRDDAY ,SCLNONPR ,SCMNMTIN  ,SCMNENIN  ,SCTXTMTH  ,SCTXTENG ,
+UNIQUEID ) 
+SELECT GRLENRL ,BOYENRL ,TTLENRL ,TGRLENRL , TBOYENRL  ,TTTLENRL ,ATDTMSY ,ATDDFSY  ,TGMTHENG ,SCALLCT  ,CLSORD1 ,CLSORD2 ,SCAVLB1 ,
+SCAVLB2 ,SCAVLB3 ,SCAVLB4 ,SCAVLB5 ,SCAVLB6 ,SCAVLB7 ,SCAVLB8 ,SCAVLB9 ,SCAVLB10 ,SCPRDDAY ,SCLNONPR ,SCMNMTIN  ,SCMNENIN  ,SCTXTMTH  ,SCTXTENG ,UNIQUEID 
+FROM [dbo].[vietnam_wave1];
+	--> Data Insertion into Table-5
+INSERT INTO Principal_Quest(NUMG10CLS  ,HTNTCMP  ,HTDINT  ,HTAGE  ,HTSEX  ,HTETHGRP  ,HTRELGN  ,HTMTHTNG  ,HTFRMPRV  ,HTCURRLE  ,HTYRSHT  ,HTLVLEDC  ,HTLVLTCH  ,
+HTEXCTCH  ,HTTYPSCH  ,HTHGHGRD  ,HTNMSTEN  ,HTNMETST  ,HTYREST  ,HTP135CM  ,HTPRDIST  ,HTBOARD  ,HTSCHAVL  ,HTMRNSTR  ,HTMRNEND  ,HTAFTSTR  ,HTAFTEND  ,
+HTREGTCH  ,HTNONCMP  ,HTEXTCUR  ,HTNOACT  ,HTNOCMCH  ,HTNOCMCL  ,HTRQNMST  ,HTCENMST  ,HTPTNMST  ,HTRQMATH  ,HTRQENG  ,HTTCHAPP  ,HTREWTC1  ,HTREWTC2  ,HTREWTC4  ,HTREWTC5  ,
+HTREWTC6  ,HTREWTC7  ,HTREWTC8  ,HTDISTC1  ,HTDISTC2  ,HTDISTC3  ,HTDISTC4  ,HTDISTC6  ,HTDISTC7  ,HTDISTC8  ,HTDISTC0  ,HTGNADMN  ,HTACRARE  ,HTACRAETH  ,HTACRAGND  ,
+HTACRAPAY  ,HTACRAEXM  ,HTACRAOTH  ,HTACRAALL  ,HTAMPAID1  ,HTEXM011  ,HTEXM021  ,HTEXM031  ,HTEXM041  ,HTEXM051  ,HTEXM061  ,HTEXM001  ,HTAMPAID2  ,HTEXM012  ,HTEXM022  ,
+HTEXM032  ,HTEXM042  ,HTEXM052  ,HTEXM062  ,HTEXM002  ,HTAMPAID3  ,HTEXM013  ,HTEXM023  ,HTEXM033  ,HTEXM043  ,HTEXM053  ,HTEXM063  ,HTEXM003  ,HTAMPAID4  ,HTEXM014  ,HTEXM024  ,
+HTEXM034  ,HTEXM044  ,HTEXM054  ,HTEXM064  ,HTEXM004  ,HTAMPAID5  ,HTEXM015  ,HTEXM025  ,HTEXM035  ,HTEXM045  ,HTEXM055  ,HTEXM065  ,HTEXM005  ,HTAMPAID6  ,HTEXM016  ,
+HTEXM026  ,HTEXM036  ,HTEXM046  ,HTEXM056  ,HTEXM066  ,HTEXM006  ,HTAMPAID7  ,HTEXM017  ,HTEXM027  ,HTEXM037  ,HTEXM047  ,HTEXM057  ,HTEXM067  ,HTEXM007  ,HTAMPAID8  ,HTEXM018  ,
+HTEXM028  ,HTEXM038  ,HTEXM048  ,HTEXM058  ,HTEXM068  ,HTEXM008  ,HTAMPAID9  ,HTEXM019  ,HTEXM029  ,HTEXM039  ,HTEXM049  ,HTEXM059  ,HTEXM069  ,HTEXM009  ,HTAMPAID10  ,
+HTEXM0110  ,HTEXM0210  ,HTEXM0310  ,HTEXM0410  ,HTEXM0510  ,HTEXM0610  ,HTEXM0010  ,HTAMPAID11  ,HTEXM0111  ,HTEXM0211  ,HTEXM0311  ,HTEXM0411  ,HTEXM0511  ,HTEXM0611  ,
+HTEXM0011  ,HTAMPAID12  ,HTEXM0112  ,HTEXM0212  ,HTEXM0312  ,HTEXM0412  ,HTEXM0512  ,HTEXM0612  ,HTEXM0012  ,HTENGR10  ,HTENBY10  ,HTTLGR10  ,HTTLBY10  ,HTENGR11  ,
+HTENBY11  ,HTTLGR11  ,HTTLBY11  ,HTENGR12  ,HTENBY12  ,HTTLGR12  ,HTTLBY12  ,HTNMCL10  ,HTNMCL11  ,HTNMCL12  ,HTALLC10  ,HTPRTEXP  ,HTENTOT10  ,UNIQUEID)
+SELECT NUMG10CLS  ,HTNTCMP  ,HTDINT  ,HTAGE  ,HTSEX  ,HTETHGRP  ,HTRELGN  ,HTMTHTNG  ,HTFRMPRV  ,HTCURRLE  ,HTYRSHT  ,HTLVLEDC  ,HTLVLTCH  ,
+HTEXCTCH  ,HTTYPSCH  , HTHGHGRD  ,HTNMSTEN  ,HTNMETST  ,HTYREST  ,HTP135CM  ,HTPRDIST  ,HTBOARD  ,HTSCHAVL  ,HTMRNSTR  ,HTMRNEND  ,HTAFTSTR  ,HTAFTEND  ,
+HTREGTCH  ,HTNONCMP  ,HTEXTCUR  ,HTNOACT  ,HTNOCMCH  ,HTNOCMCL  ,HTRQNMST  ,HTCENMST  ,HTPTNMST  ,HTRQMATH  ,HTRQENG  ,HTTCHAPP  ,HTREWTC1  ,HTREWTC2  ,HTREWTC4  ,HTREWTC5  ,
+HTREWTC6  ,HTREWTC7  ,HTREWTC8  ,HTDISTC1  ,HTDISTC2  ,HTDISTC3  ,HTDISTC4  ,HTDISTC6  ,HTDISTC7  ,HTDISTC8  ,HTDISTC0  ,HTGNADMN  ,HTACRARE  ,HTACRAETH  ,HTACRAGND  ,
+HTACRAPAY  ,HTACRAEXM  ,HTACRAOTH  ,HTACRAALL  ,HTAMPAID1  ,HTEXM011  ,HTEXM021  ,HTEXM031  ,HTEXM041  ,HTEXM051  ,HTEXM061  ,HTEXM001  ,HTAMPAID2  ,HTEXM012  ,HTEXM022  ,
+HTEXM032  ,HTEXM042  ,HTEXM052  ,HTEXM062  ,HTEXM002  ,HTAMPAID3  ,HTEXM013  ,HTEXM023  ,HTEXM033  ,HTEXM043  ,HTEXM053  ,HTEXM063  ,HTEXM003  ,HTAMPAID4  ,HTEXM014  ,HTEXM024  ,
+HTEXM034  ,HTEXM044  ,HTEXM054  ,HTEXM064  ,HTEXM004  ,HTAMPAID5  ,HTEXM015  ,HTEXM025  ,HTEXM035  ,HTEXM045  ,HTEXM055  ,HTEXM065  ,HTEXM005  ,HTAMPAID6  ,HTEXM016  ,
+HTEXM026  ,HTEXM036  ,HTEXM046  ,HTEXM056  ,HTEXM066  ,HTEXM006  ,HTAMPAID7  ,HTEXM017  ,HTEXM027  ,HTEXM037  ,HTEXM047  ,HTEXM057  ,HTEXM067  ,HTEXM007  ,HTAMPAID8  ,HTEXM018  ,
+HTEXM028  ,HTEXM038  ,HTEXM048  ,HTEXM058  ,HTEXM068  ,HTEXM008  ,HTAMPAID9  ,HTEXM019  ,HTEXM029  ,HTEXM039  ,HTEXM049  ,HTEXM059  ,HTEXM069  ,HTEXM009  ,HTAMPAID10  ,
+HTEXM0110  ,HTEXM0210  ,HTEXM0310  ,HTEXM0410  ,HTEXM0510  ,HTEXM0610  ,HTEXM0010  ,HTAMPAID11  ,HTEXM0111  ,HTEXM0211  ,HTEXM0311  ,HTEXM0411  ,HTEXM0511  ,HTEXM0611  ,
+HTEXM0011  ,HTAMPAID12  ,HTEXM0112  ,HTEXM0212  ,HTEXM0312  ,HTEXM0412  ,HTEXM0512  ,HTEXM0612  ,HTEXM0012  ,HTENGR10  ,HTENBY10  ,HTTLGR10  ,HTTLBY10  ,HTENGR11  ,
+HTENBY11  ,HTTLGR11  ,HTTLBY11  ,HTENGR12  ,HTENBY12  ,HTTLGR12  ,HTTLBY12  ,HTNMCL10  ,HTNMCL11  ,HTNMCL12  ,HTALLC10  ,HTPRTEXP  ,HTENTOT10  ,UNIQUEID 
+FROM [dbo].[vietnam_wave1];
+
+--> Reports Using Views and Store Procedures
+
+DROP VIEW Student_INFORMATION_VIEW;
+CREATE VIEW Student_INFORMATION_VIEW --GENERAL VIEW
+AS
+select a.UNIQUEID,a.schoolid,a.classid,a.studentid,
+LOCALITY= CASE
+When a.LOCALITY=1 Then 'RURAL' When a.LOCALITY=2 Then 'URBAN' END,
+PROVINCE= CASE
+When a.PROVINCE =1 Then 'Ben Tre'
+When a.PROVINCE =2 Then 'Da Nang'
+When a.PROVINCE =3 Then 'Hung Yen'
+When a.PROVINCE =4 Then 'Lao Cai' ELSE 'Phu Yen' END,
+a.DISTRICTCODE,a.YLCHILDID,
+GENDER= CASE When b.GENDER= '1' Then 'MALE' When b.GENDER= '2' Then 'FEMALE' ELSE 'Not Mentioned' END,
+ETHNICITY= CASE
+When b.ETHNICITY= 1 Then 'Kinh'
+When b.ETHNICITY= 2 Then 'H’Mong'
+When b.ETHNICITY= 3 Then 'Cham-HRoi'
+When b.ETHNICITY= 4 Then 'Ede'
+When b.ETHNICITY= 5 Then 'Ba Na'
+When b.ETHNICITY= 6 Then 'Nung'
+When b.ETHNICITY= 7 Then 'Tay'
+When b.ETHNICITY= 8 Then 'Dao'
+When b.ETHNICITY= 9 Then 'Giay'
+When b.ETHNICITY= 10 Then 'Other'
+ELSE 'Not Mentioned' END,
+StudySpaceAtHome=CASE
+WHEN b.STPLSTDY='1' THEN 'YES'
+WHEN b.STPLSTDY='0' THEN 'NO'
+ELSE 'Not Mentioned' END,
+Poverty_Fee_Excemption=CASE
+WHEN c.HTEXM018 = '0' THEN 'NO' WHEN c.HTEXM018 ='1' THEN 'YES' END,
+SightProblem=CASE
+WHEN b.STDHLTH1 = '0' THEN 'NO' WHEN b.STDHLTH1 ='1' THEN 'YES' END,
+HearingProblem=CASE
+WHEN b.STDHLTH2 = '0' THEN 'NO' WHEN b.STDHLTH2 ='1' THEN 'YES' END,
+Headaches=CASE
+WHEN b.STDHLTH3 = '0' THEN 'NO' WHEN b.STDHLTH3 ='1' THEN 'YES' END,
+Fever=CASE
+WHEN b.STDHLTH4 = '0' THEN 'NO' WHEN b.STDHLTH4 ='1' THEN 'YES' END,
+StomachProblem=CASE
+WHEN b.STDHLTH5 = '0' THEN 'NO' WHEN b.STDHLTH5 ='1' THEN 'YES' END,
+OtherProblem=CASE
+WHEN b.STDHLTH6 = '0' THEN 'NO' WHEN b.STDHLTH6 ='1' THEN 'YES' END,
+NonSchoolWork_Hours=CASE
+WHEN b.STNONSCL= '0' THEN 'None'
+WHEN b.STNONSCL= '1' THEN 'Less than one hour'
+WHEN b.STNONSCL= '2' THEN '1-2 hours'
+WHEN b.STNONSCL= '3' THEN '2-3 hours'
+WHEN b.STNONSCL= '4' THEN 'More than 4 hours'
+ELSE 'Not Given' END,
+STD_Attendance= CASE
+WHEN d.ATDTMSY= '1' THEN 'Normal' WHEN d.ATDTMSY='2' THEN 'Higher Than Normal' WHEN d.ATDTMSY='3' THEN 'Lower Than Normal'
+END,
+b.AGE,b.ABSENT_DAYS
+from [dbo].[General_INFO] a
+INNER JOIN [dbo].[Student_Quest] b
+ON a.UNIQUEID=b.UNIQUEID
+INNER JOIN [dbo].Principal_Quest c
+ON b.UNIQUEID=c.UNIQUEID
+INNER JOIN [dbo].[Class_Roaster] d
+ON c.UNIQUEID=d.UNIQUEID
+
+
+	--> 1-Students MALE and FEMALE population Province Wise 
+DROP VIEW MALE_FEMALE;
+CREATE VIEW MALE_FEMALE AS
+select  v.PROVINCE,(select DISTINCT(count(UNIQUEID)) from  dbo.Student_INFORMATION_VIEW b where b.GENDER='MALE' and v.PROVINCE=b.PROVINCE)as MALE,
+(select count(UNIQUEID)from  dbo.Student_INFORMATION_VIEW b where b.GENDER='FEMALE' and v.PROVINCE=b.PROVINCE)as FEMALE
+from dbo.Student_INFORMATION_VIEW v
+group by province
+	--> Executing the view
+GO
+SELECT * FROM MALE_FEMALE;
+
+	--> 2-Students having study space at Home by LOCALITY
+DROP VIEW STUDY_SPACE_AT_HOME;
+CREATE VIEW STUDY_SPACE_AT_HOME AS
+select  v.LOCALITY,(select DISTINCT(count(UNIQUEID)) from  dbo.Student_INFORMATION_VIEW b where b.StudySpaceAtHome = 'YES' and v.LOCALITY=b.LOCALITY)as [STUDY SPACE AVAILABLE],
+(select count(UNIQUEID)from  dbo.Student_INFORMATION_VIEW b where b.StudySpaceAtHome = 'NO' and v.LOCALITY=b.LOCALITY)as [STUDY SPACE NOT AVAILABLE]
+from dbo.Student_INFORMATION_VIEW v
+group by LOCALITY
+	--> Executing the view
+GO
+SELECT * FROM STUDY_SPACE_AT_HOME;
+
+	--> 3- Students who spend time on non-school work But their parents can Read & Write by Locality
+DROP VIEW STD_NonSchoolWork_Hours;
+CREATE VIEW STD_NonSchoolWork_Hours AS
+select  v.LOCALITY,(select DISTINCT(count(UNIQUEID)) from  dbo.Student_INFORMATION_VIEW b where b.NonSchoolWork_Hours = 'None' and v.LOCALITY=b.LOCALITY)as [None],
+(select count(UNIQUEID)from  dbo.Student_INFORMATION_VIEW b where b.NonSchoolWork_Hours = 'Less than one hour' and v.LOCALITY=b.LOCALITY)as [Less than one hour],
+(select count(UNIQUEID)from  dbo.Student_INFORMATION_VIEW b where b.NonSchoolWork_Hours = '1-2 hours' and v.LOCALITY=b.LOCALITY)as [1-2 hours],
+(select count(UNIQUEID)from  dbo.Student_INFORMATION_VIEW b where b.NonSchoolWork_Hours = '2-3 hours' and v.LOCALITY=b.LOCALITY)as [2-3 hours],
+(select count(UNIQUEID)from  dbo.Student_INFORMATION_VIEW b where b.NonSchoolWork_Hours = 'More than 4 hours' and v.LOCALITY=b.LOCALITY)as [More than 4 hours],
+(select count(UNIQUEID)from  dbo.Student_INFORMATION_VIEW b where b.NonSchoolWork_Hours = 'Not Given' and v.LOCALITY=b.LOCALITY)as [Not Given]
+from dbo.Student_INFORMATION_VIEW v
+group by LOCALITY
+	--> Executing the view
+GO
+SELECT * FROM STD_NonSchoolWork_Hours;
+
+	--> 4- Students having Health Problems by Province
+DROP VIEW STD_HealthProblems;
+CREATE VIEW STD_HealthProblems
+AS
+select  v.PROVINCE,(select DISTINCT(count(UNIQUEID)) from  dbo.Student_INFORMATION_VIEW b where b.SightProblem = 'YES' and v.PROVINCE=b.PROVINCE)as [Sight Problem],
+(select count(UNIQUEID)from  dbo.Student_INFORMATION_VIEW b where b.HearingProblem = 'YES' and v.PROVINCE=b.PROVINCE)as [Hearing Problem],
+(select count(UNIQUEID)from  dbo.Student_INFORMATION_VIEW b where b.Headaches = 'YES' and v.PROVINCE=b.PROVINCE)as [Headaches],
+(select count(UNIQUEID)from  dbo.Student_INFORMATION_VIEW b where b.Fever = 'YES' and v.PROVINCE=b.PROVINCE)as [Fever],
+(select count(UNIQUEID)from  dbo.Student_INFORMATION_VIEW b where b.StomachProblem = 'YES' and v.PROVINCE=b.PROVINCE)as [Stomach Problem],
+(select count(UNIQUEID)from  dbo.Student_INFORMATION_VIEW b where b.OtherProblem = 'YES' and v.PROVINCE=b.PROVINCE)as [Other Problem]
+from dbo.Student_INFORMATION_VIEW v
+group by PROVINCE
+	--> Executing the view
+GO
+SELECT * FROM STD_HealthProblems;
+
+	--> 5- Students attendance during the survey Locality and Province Wise 
+DROP PROCEDURE Student_Attendance;
+Create Procedure Student_Attendance @Locality nvarchar(30), @Province nvarchar(30), @StudentAttendance nvarchar(30)
+As
+Select DISTINCT(a.UNIQUEID), STD_Attendance= CASE
+WHEN b.ATDTMSY= '1' THEN 'Normal' WHEN b.ATDTMSY='2' THEN 'Higher Than Normal' WHEN b.ATDTMSY='3' THEN 'Lower Than Normal'
+END,
+PROVINCE= CASE
+When a.PROVINCE =1 Then 'Ben Tre'
+When a.PROVINCE =2 Then 'Da Nang'
+When a.PROVINCE =3 Then 'Hung Yen'
+When a.PROVINCE =4 Then 'Lao Cai' ELSE 'Phu Yen' END,
+LOCALITY= CASE
+When a.LOCALITY=1 Then 'RURAL' When a.LOCALITY=2 Then 'URBAN' END
+FROM General_INFO a inner join Class_Roaster b on a.UNIQUEID=b.UNIQUEID
+WHERE ATDTMSY= @StudentAttendance and LOCALITY= @Locality and PROVINCE=@Province
+	--> Executing the procedure
+GO
+EXEC Student_Attendance @StudentAttendance='1', @Locality='2', @Province='2'
+
+	--> 6- Students attendance during the survey Province Wise using VIEW
+DROP VIEW STD_Attendance_Survey;
+CREATE VIEW STD_Attendance_Survey AS
+select  v.PROVINCE,(select DISTINCT(count(UNIQUEID)) from  dbo.Student_INFORMATION_VIEW b where b.STD_Attendance = 'Normal' and v.PROVINCE=b.PROVINCE)as [Normal],
+(select count(UNIQUEID)from  dbo.Student_INFORMATION_VIEW b where b.STD_Attendance ='Higher Than Normal' and v.PROVINCE=b.PROVINCE)as [Higher Than Normal],
+(select count(UNIQUEID)from  dbo.Student_INFORMATION_VIEW b where b.STD_Attendance = 'Lower Than Normal' and v.PROVINCE=b.PROVINCE)as [Lower Than Normal]
+from dbo.Student_INFORMATION_VIEW v
+group by PROVINCE
+	--> Executing the View
+GO
+SELECT * FROM STD_Attendance_Survey;
+
+
+
+
+
+
+
+
+
+                                             
+				------------>***** TASK 3 *****<------------
+---- All tables & columns are referenced by data dictionary and Technical guide
+
+--> Creating Database 
+create database Man_Crime;
+
+	--> Adding new Column id with serial number   (Following Lab Week 8 instructions)
+ALTER TABLE Man_Crime.[dbo].[ManCrimeData 17-18]
+ADD ID INT IDENTITY;
+
+	--> Making Primary key
+ALTER TABLE Man_Crime.[dbo].[ManCrimeData 17-18]
+ADD CONSTRAINT PK_Id PRIMARY KEY NONCLUSTERED (ID);
+GO
+	--> Adding new Column GeoLocation
+ALTER TABLE Man_Crime.[dbo].[ManCrimeData 17-18]
+ADD [GeoLocation] GEOGRAPHY;
+
+	--> Creating geography points in GeoLocation using Crime Data 
+UPDATE Man_Crime.[dbo].[ManCrimeData 17-18]
+SET [GeoLocation] = geography::Point(Latitude, Longitude, 4326)
+WHERE [Longitude] IS NOT null
+AND [Latitude] IS NOT null
+AND CAST(Latitude AS decimal(10, 6)) BETWEEN -90 AND 90
+AND CAST(Longitude AS decimal(10, 6)) BETWEEN -90 AND 90
+
+	--> Viewing LSOA names
+Drop view Counties;
+create view Counties AS 
+select *, substring([LSOA name],1,LEN([LSOA name]) - 4)as County_name
+from Man_Crime.[dbo].[ManCrimeData 17-18];
+	--> Executing the view
+GO
+Select * from Counties;
+
+
+	--> Viewing Data only from Manchester counties
+Drop view Man_counties
+Create View Man_counties AS
+SELECT * from  Counties where [County_name] IN('Salford','Manchester','Rochdale','Oldham',
+'Stockport','Tameside','Wigan','Trafford','Bolton','Bury')
+	--> Executing the view
+GO
+Select * from Man_counties;
+
+--> 1- Viewing Highest Crimes in Manchester 
+Drop view Highest_ManCrimes;
+Create View Highest_ManCrimes AS
+SELECT [Crime type] ,count(ID)as TotalNumberofCrimes
+from Man_counties
+Group By [Crime type]
+	--> Executing the view
+Select * from Highest_ManCrimes order by TotalNumberofCrimes desc;
+
+-->  2- Counties Data where Crime Offender has sent to prison
+Drop view Counties_OffenderPrison;
+Create View Counties_OffenderPrison AS
+SELECT County_name AS Counties,count([Last outcome category]) As [Offender sent to prison]
+from Man_counties
+Where [Last outcome category] = 'Offender sent to prison'
+Group by County_name
+	--> Executing the view
+Select * from Counties_OffenderPrison;
+
+-->  3- Counties Data where Crime Offender has sent to prison
+DROP VIEW Counties_CrimeLocation;
+Create View Counties_CrimeLocation AS
+SELECT County_name AS Counties,count([Location]) As [On/Near Parking Area Crimes]
+from Man_counties
+Where [Location] = 'On or near Parking Area'
+Group by County_name
+	--> Executing the view
+GO
+Select * from Counties_CrimeLocation;
+
+--> 4- Creating view to check 'Public order Cime' in Manchester
+DROP VIEW Public_order;
+CREATE VIEW Public_order AS
+SELECT * FROM Man_counties
+WHERE [Crime type]='Public order'
+AND [GeoLocation] IS NOT null;
+	--> Executing the view
+GO
+Select * from Public_order;
+
+--> 5- Creating view to check 'Criminal damage and arson' in Manchester
+DROP VIEW Criminal_damage_arson;
+CREATE VIEW Criminal_damage_arson AS
+SELECT * FROM Man_counties
+WHERE [Crime type]='Criminal damage and arson'
+AND [GeoLocation] IS NOT null;
+	--> Executing the view
+GO
+Select * from Criminal_damage_arson;
+
+--> 6- Creating view to check 'Burglary' in Manchester
+DROP VIEW Burglary_Crime;
+CREATE VIEW Burglary_Crime AS
+SELECT * FROM Man_counties
+WHERE [Crime type]='Burglary'
+AND [GeoLocation] IS NOT null;
+	--> Executing the view
+GO
+Select * from Burglary_Crime;
+
+	-------------> *** CREATING VIEWS FOR QGIS *** <-------------
+--> 6- Creating view to check 'Violence and sexual offences' in Manchester
+DROP VIEW Vehicle_crime_GreaterManchester;
+CREATE VIEW Vehicle_crime_GreaterManchester AS
+SELECT * FROM Man_counties
+WHERE [Crime type]='Vehicle crime' and [County_name]='Manchester'
+AND [GeoLocation] IS NOT null;
+	--> Executing the view
+GO
+Select * from Vehicle_crime_GreaterManchester;
+
+--> 7- Creating view to check 'Anti-social behaviour' in SALFORD county for (Google Satellite map as OpenLayers plugin in QGIS)
+DROP VIEW Anti_social_behaviour_SALFORD;
+CREATE VIEW Anti_social_behaviour_SALFORD AS
+SELECT * FROM Man_counties
+WHERE [Crime type]='Anti-social behaviour'
+AND [GeoLocation] IS NOT null AND County_name='Salford';
+	--> Executing the view
+GO
+Select * from Anti_social_behaviour_SALFORD;
+
+
+	-------------> *** 8- CREATING VIEW BY JOINING CRIME DATA WITH POPULATION FOR VISUALIZATION *** <-------------
+DROP VIEW Joining_Crimes_Population;
+CREATE VIEW Joining_Crimes_Population AS 
+Select B.[Area Codes] AS CrimePopFile17, C.[Area Codes] AS CrimePopFile18, 
+A.[Month], A.[Reported by], A.[Location], A.[LSOA name], A.[Crime type], A.[Last outcome category] 
+FROM [dbo].[ManCrimeData 17-18] AS A
+INNER JOIN [dbo].[ManPopulation17] AS B
+ON A.[LSOA code] = B.[Area Codes]
+INNER JOIN [dbo].[ManPopulation18] AS C
+ON B.[Area Codes] = C.[Area Codes];
+	--> Executing the view
+GO
+select * from Joining_Crimes_Population;
+
+
+
